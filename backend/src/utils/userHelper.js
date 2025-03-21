@@ -30,6 +30,42 @@ const createUser = async (userModel) => {
     }
 };
 
+const loginUser = async (userModel) => {
+    try {
+        const user = await User.findOne({ email: userModel.email });
+        if (!user) {
+            return { sucesso: false, mensagem: 'Utilizador não encontrado.' };
+        }
+
+        const passwordMatch = await bcrypt.compare(userModel.password, user.password);
+        if (!passwordMatch) {
+            return { sucesso: false, mensagem: 'Palavra-passe incorreta.' };
+        }
+
+        const token = jwt.sign(
+            { id: user._id, email: user.email, nivelAcesso: user.nivelAcesso },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES || '1h' }
+        );
+
+        return {
+            sucesso: true,
+            mensagem: 'Login efetuado com sucesso.',
+            token,
+            utilizador: {
+                id: user._id,
+                nome: user.nome,
+                email: user.email,
+                nivelAcesso: user.nivelAcesso,
+                dataCriacao: user.dataCriacao
+            }
+        };
+    } catch (erro) {
+        console.error('❌ Erro no login:', erro);
+        return { sucesso: false, mensagem: 'Erro ao efetuar login.' };
+    }
+};
+
 module.exports = {
     createUser
 };
