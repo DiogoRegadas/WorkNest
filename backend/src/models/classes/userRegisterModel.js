@@ -2,13 +2,12 @@ class UserRegisterModel {
     #nome;
     #email;
     #password;
-    #dataCriacao;
 
     constructor(nome, email, password) {
-        this.#nome = nome;
-        this.#email = email;
+        this.nome = nome;
+        this.email = email;
         this.password = password; // Passa pelo setter
-        this.#dataCriacao = new Date(); // Define automaticamente a data de criação
+        
     }
 
     // Getters
@@ -24,10 +23,7 @@ class UserRegisterModel {
         return this.#password;
     }
 
-    get dataCriacao() {
-        return this.#dataCriacao;
-    }
-
+    
     // Setter para validar a password
     set password(novaPassword) {
         if (!this.#validarPassword(novaPassword)) {
@@ -36,9 +32,21 @@ class UserRegisterModel {
         this.#password = novaPassword;
     }
 
+    // Setters
+    set nome(nome) {
+        this.#nome = nome;;
+    }
+
+    set email(email) {
+        this.#email = email;;
+    }
+
+
     // Método privado para validar a password
     #validarPassword(password) {
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
         return regex.test(password);
     }
 }
+
+module.exports = UserRegisterModel;

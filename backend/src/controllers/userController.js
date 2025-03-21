@@ -1,26 +1,36 @@
 const User = require('../models/classes/userModel');
 const UserRegisterModel = require('../models/classes/userRegisterModel');
 const userHelper = require('../utils/userHelper');
-//const { registerUserSchema } = require('../validations/userValidations');
+const { registerUserSchema, loginUserSchema } = require('../validations/userValidations');
 const bcrypt = require('bcrypt');
+
 
 // Registar um novo utilizador
 exports.registerUser = async (req, res) => {
     try {
+        console.log("📥 Pedido recebido:", req.body); // 👈 1. Ver se os dados chegaram
+
         const { error } = registerUserSchema.validate(req.body);
         if (error) {
-            return res.status(400).json({ message: error.details[0].message });
+            console.log("❌ Erro de validação Joi:", error.details[0].message); // 👈 2. Ver se falha aqui
+            return res.status(400).json({ sucesso: false, mensagem: error.details[0].message });
         }
 
-        // Criar instância do modelo antes de enviar para o helper
         const { nome, email, password } = req.body;
         const newUser = new UserRegisterModel(nome, email, password);
-        
-        // Passar a instância para o helper
-        const createdUser = await userHelper.createUser(newUser);
-        res.status(201).json(createdUser);
+        console.log("🧱 UserRegisterModel criado:", newUser); // 👈 3. Ver se chegou até aqui
+
+        const resultado = await userHelper.createUser(newUser);
+        console.log("✅ Resultado do helper:", resultado); // 👈 4. Ver o retorno
+
+        if (resultado.sucesso) {
+            return res.status(201).json({ sucesso: true, mensagem: resultado.mensagem });
+        } else {
+            return res.status(400).json({ sucesso: false, mensagem: resultado.mensagem });
+        }
     } catch (error) {
-        res.status(500).json({ error: 'Erro ao registar utilizador.' });
+        console.error("❌ Erro no controller:", error); // 👈 5. Apanhar qualquer falha
+        return res.status(500).json({ sucesso: false, mensagem: 'Erro ao registar utilizador.' });
     }
 };
 

@@ -51,3 +51,5 @@ class UserModel {
         this.#dataCriacao = novaData;
     }
 }
+
+module.exports = UserModel;

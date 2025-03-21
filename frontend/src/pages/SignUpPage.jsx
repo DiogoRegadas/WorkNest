@@ -17,7 +17,8 @@ function SignUpPage() {
       console.log('Resultado:', resultado);
       // Podes redirecionar ou limpar os campos aqui
     } catch (erro) {
-      setMensagem(`❌ Erro: ${erro.message || 'Erro ao registar.'}`);
+        console.error("❌ Erro recebido do backend:", erro);
+        setMensagem(`❌ Erro: ${erro.mensagem || 'Erro ao registar.'}`);
     }
   };
 

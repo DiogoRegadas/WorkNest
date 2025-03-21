@@ -14,6 +14,11 @@ const app = express();
 // Middlewares
 app.use(express.json()); // Permite JSON no corpo das requisições
 app.use(cors()); // Ativa o CORS para permitir comunicações entre frontend e backend
+app.use(cors({
+    origin: 'http://localhost:3001', // <-- coloca a porta certa do frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+  }));
 app.use(requestLogger); // Regista todas as requisições
 
 // Rotas
