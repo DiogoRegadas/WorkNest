@@ -1,0 +1,13 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    height: 100%;
+    width: 100%;
+    background-color: #1f3546; /* ou outra cor de fundo que estejas a usar */
+    overflow-x: hidden;
+    font-family: 'Poppins', sans-serif;
+  }

@@ -1,4 +1,5 @@
 const User = require('../models/classes/userModel');
+const UserLoginModel = require('../models/classes/userLoginModel');
 const UserRegisterModel = require('../models/classes/userRegisterModel');
 const userHelper = require('../utils/userHelper');
 const { registerUserSchema, loginUserSchema } = require('../validations/userValidations');
@@ -34,42 +35,44 @@ exports.registerUser = async (req, res) => {
     }
 };
 
-exports.getUsers = async (req, res) => {
+exports.loginUser = async (req, res) => {
     try {
-        const users = await User.find();
-        res.json(users);
+        const { error } = loginUserSchema.validate(req.body);
+        if (error) {
+            return res.status(400).json({ sucesso: false, mensagem: error.details[0].message });
+        }
+
+        const user = new UserLoginModel(req.body.email, req.body.password);
+        
+        const resultado = await userHelper.loginUser(user);
+
+        if (resultado.sucesso) {
+            return res.status(200).json({
+                sucesso: true,
+                mensagem: resultado.mensagem,
+                token: resultado.token,
+                utilizador: resultado.utilizador
+            });
+        } else {
+            return res.status(401).json({ sucesso: false, mensagem: resultado.mensagem });
+        }
     } catch (error) {
-        res.status(500).json({ error: 'Erro ao obter utilizadores.' });
+        console.error("❌ Erro no login controller:", error);
+        return res.status(500).json({ sucesso: false, mensagem: 'Erro ao efetuar login.' });
     }
 };
 
-exports.getUserById = async (req, res) => {
+exports.getUserProfile = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
-        if (!user) return res.status(404).json({ message: 'Utilizador não encontrado' });
-        res.json(user);
+        const { id, email, nome, nivelAcesso, dataCriacao } = req.user;
+        return res.status(200).json({
+            sucesso: true,
+            utilizador: { id, email, nome, nivelAcesso, dataCriacao }
+        });
     } catch (error) {
-        res.status(500).json({ error: 'Erro ao obter utilizador.' });
+        console.error("❌ Erro ao obter perfil:", error);
+        return res.status(500).json({ sucesso: false, mensagem: 'Erro ao obter perfil.' });
     }
 };
 
-exports.updateUser = async (req, res) => {
-    try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updatedUser) return res.status(404).json({ message: 'Utilizador não encontrado' });
-        res.json(updatedUser);
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao atualizar utilizador.' });
-    }
-};
-
-exports.deleteUser = async (req, res) => {
-    try {
-        const deletedUser = await User.findByIdAndDelete(req.params.id);
-        if (!deletedUser) return res.status(404).json({ message: 'Utilizador não encontrado' });
-        res.json({ message: 'Utilizador eliminado com sucesso' });
-    } catch (error) {
-        res.status(500).json({ error: 'Erro ao eliminar utilizador.' });
-    }
-};
 

@@ -1,5 +1,6 @@
 const User = require('../models/database/userMongo'); // Mongoose schema
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const createUser = async (userModel) => {
         
@@ -67,5 +68,6 @@ const loginUser = async (userModel) => {
 };
 
 module.exports = {
-    createUser
+    createUser,
+    loginUser
 };
