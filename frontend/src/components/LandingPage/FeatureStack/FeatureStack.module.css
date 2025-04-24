@@ -1,0 +1,84 @@
+.sectionContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 80px;
+    padding: 80px 60px;
+    color: white;
+    flex-wrap: wrap;
+  }
+  
+  .textoEsquerdo {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%; /* permite alinhar ao centro */
+  }
+  
+  .titulo {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  .descricao {
+    font-size: 1.2rem;
+    color: #ccc;
+    max-width: 500px;
+  }
+  
+  .cardsDireita {
+    flex: 1;
+    position: relative;
+    height: 340px;
+    perspective: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  
+  
+  .carousel {
+    width: 260px;
+    height: 160px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1s ease-in-out;
+  }
+  
+  .card {
+    position: absolute;
+    width: 280px;
+    height: 200px;
+    background: linear-gradient(145deg, rgba(44, 42, 41, 0.9), rgba(20, 20, 20, 0.9));
+    border-radius: 24px;
+    box-shadow:
+      0 10px 30px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.03),
+      inset 0 2px 6px rgba(255, 255, 255, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: white;
+    font-size: 1.4rem;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(2px);
+  }
+  
+  
+  /* Posicionar os cards em círculo 3D */
+  .card:nth-child(1) {
+    transform: rotateY(0deg) translateZ(300px);
+  }
+  .card:nth-child(2) {
+    transform: rotateY(120deg) translateZ(300px);
+  }
+  .card:nth-child(3) {
+    transform: rotateY(240deg) translateZ(300px);
+  }
+  

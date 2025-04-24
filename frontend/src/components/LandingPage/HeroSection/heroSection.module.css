@@ -1,0 +1,125 @@
+.hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1.5rem;
+    text-align: center;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .stat {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #a5b4fc;
+    margin-bottom: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+  }
+  
+  .hero h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+    font-weight: 800;
+    max-width: 900px;
+    margin-bottom: 1rem;
+  }
+  
+  .hero p {
+    font-size: 1.25rem;
+    max-width: 600px;
+    color: #cbd5e1;
+    margin-bottom: 2rem;
+  }
+  
+  .buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 4rem;
+  }
+  
+  .buttons button {
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    border: 1px solid white;
+    background-color: transparent;
+    color: white;
+  }
+  
+  .buttons button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+  }
+  
+  .slider {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    margin-top: 2rem;
+    position: relative;
+    height: 6rem;
+    mask-image: linear-gradient(to right, transparent, white 30%, white 70%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, white 30%, white 70%, transparent);
+  }
+  
+  .slider::before,
+  .slider::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, white 30%, white 70%, transparent);
+    z-index: 1;
+  }
+  
+  .slider::after {
+    top: auto;
+    bottom: 0;
+  }
+  
+  .sliderTrack {
+    display: flex;
+    gap: 6rem;
+    animation: slideTechnologies 1600s linear infinite;
+    will-change: transform;
+    width: fit-content;
+  }
+  
+  .sliderItem {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #d1d5db;
+    white-space: nowrap;
+    padding: 2rem 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  
+  .sliderItem {
+    opacity: 1;
+  }
+  
+  .sliderItem {
+    animation: none;
+  }
+  
+  @keyframes slideTechnologies {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  

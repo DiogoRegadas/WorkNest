@@ -1,55 +1,59 @@
-import { useState } from 'react';
-import { registarUtilizador } from '../services/api';
+import { useState } from "react";
+import { registarUtilizador } from "../services/api"; // Função para registar utilizador
+import SignUp from "../components/SignPage/signUp";
+import "../styles/background.css";
 
-function SignUpPage() {
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [mensagem, setMensagem] = useState('');
+export default function SignUpPage() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    localidade: "",
+    password: "",
+    confirmPassword: ""
+  });
+
+  const [mensagem, setMensagem] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMensagem('');
+    setMensagem("");
+
+    if (formData.password !== formData.confirmPassword) {
+      setMensagem("❌ As passwords não coincidem.");
+      return;
+    }
 
     try {
-      const resultado = await registarUtilizador({ nome, email, password });
-      setMensagem('✅ Utilizador criado com sucesso!');
-      console.log('Resultado:', resultado);
-      // Podes redirecionar ou limpar os campos aqui
+      // Aqui chamar a API de registo
+      const resposta = await registarUtilizador({
+        nome: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        localidade: formData.localidade,
+        password: formData.password
+      });
+
+      if (resposta.sucesso) {
+        setMensagem("✅ Conta criada com sucesso!");
+      } else {
+        setMensagem(`❌ ${resposta.mensagem}`);
+      }
     } catch (erro) {
-        console.error("❌ Erro recebido do backend:", erro);
-        setMensagem(`❌ Erro: ${erro.mensagem || 'Erro ao registar.'}`);
+      setMensagem(`❌ ${erro.message || "Erro ao criar conta."}`);
     }
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '100px' }}>
-      <h2>Criar Conta</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Nome"
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-        /><br /><br />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        /><br /><br />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        /><br /><br />
-        <button type="submit">Registar</button>
-      </form>
-
-      {mensagem && <p style={{ marginTop: '20px' }}>{mensagem}</p>}
-    </div>
+    <SignUp
+      formData={formData}
+      onChange={handleChange}
+      onSubmit={handleSubmit}
+      mensagem={mensagem}
+    />
   );
 }
-
-export default SignUpPage;

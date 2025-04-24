@@ -1,0 +1,70 @@
+.navbar {
+  position: fixed;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(14px);
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  width: 95%;
+  max-width: 95%;
+  height: 3.5rem;
+ 
+
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  margin-right: auto;
+}
+
+.links {
+  display: flex;
+  gap: 2rem;
+  color: #d1d5db;
+  font-weight: 500;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  margin-right: 1.5rem;
+}
+
+.links a {
+  transition: color 0.3s ease;
+  text-decoration: none;
+  color: #d1d5db;
+}
+
+.links a:hover {
+  color: #ffffff;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.actions button {
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  color: #ffffff;
+  background-color: transparent;
+  border: 1px solid #ffffff;
+  padding: 0.4rem 1.2rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.actions button:hover {
+  transform: scale(1.05);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+}

@@ -1,0 +1,196 @@
+.chatCard {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+    gap: 12px;
+  }
+  
+  .messageLeft,
+  .messageRight {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    animation: fadeInMove 0.5s ease forwards;
+  }
+  
+  .messageLeft {
+    justify-content: flex-start;
+  }
+  
+  .messageRight {
+    justify-content: flex-end;
+  }
+  
+  .avatar {
+    width: 30px;
+    height: 30px;
+    background: #ccc;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  
+  .bubble {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(3px);
+    padding: 12px;
+    border-radius: 16px;
+    max-width: 200px;
+    min-width: 100px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    animation: scaleIn 0.5s ease forwards;
+  }
+  
+  .blurredText {
+    width: 100%;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    filter: blur(4px);
+    border-radius: 4px;
+  }
+  
+  .bar {
+    height: 4px;
+    border-radius: 4px;
+    width: 100%;
+  }
+  
+  .greenBar {
+    background: #00ff99;
+  }
+  
+  .yellowBar {
+    background: #f2c94c;
+  }
+  
+  @keyframes fadeInMove {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes scaleIn {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+
+  .replyWrapper {
+    position: relative;
+  }
+  
+  .replyBubble {
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .linkLine {
+    position: absolute;
+    left: 50px;
+    top: -30px;
+    height: 30px;
+    width: 2px;
+    background: #f2c94c;
+    border-radius: 1px;
+    animation: fadeInLine 0.6s ease forwards;
+  }
+  
+  @keyframes fadeInLine {
+    from {
+      height: 0;
+      opacity: 0;
+    }
+    to {
+      height: 30px;
+      opacity: 1;
+    }
+  }
+
+  .typingWrapper {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+    padding: 0 20px;
+    margin-top: 10px;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .dot {
+    width: 8px;
+    height: 8px;
+    background: #ccc;
+    border-radius: 50%;
+    animation: blink 1.4s infinite ease-in-out;
+  }
+  
+  .dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes blink {
+    0%, 80%, 100% {
+      opacity: 0.3;
+    }
+    40% {
+      opacity: 1;
+    }
+  }
+
+  .typingWrapperRight {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 60px;
+    margin-top: 8px;
+    gap: 6px;
+  }
+  
+  .typingWrapperLeft {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 30px;
+    margin-top: 8px;
+    gap: 6px;
+  }
+  
+  .dot {
+    width: 8px;
+    height: 8px;
+    background: #ccc;
+    border-radius: 50%;
+    animation: blink 1.4s infinite ease-in-out;
+  }
+  
+  .dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0.3; }
+    40% { opacity: 1; }
+  }
+  
