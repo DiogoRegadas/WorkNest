@@ -1,0 +1,17 @@
+.createButton {
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 14px 0;
+    width: 70%;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  }
+  
+  .createButton:hover {
+    background: white;
+    color: black;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.4); /* pequeno glow */
+  }

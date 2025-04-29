@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { registarUtilizador } from "../services/api"; // Função para registar utilizador
 import SignUp from "../components/SignPage/signUp";
 import "../styles/background.css";
+import bcrypt from "bcryptjs";
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({
@@ -12,7 +14,7 @@ export default function SignUpPage() {
     password: "",
     confirmPassword: ""
   });
-
+  const navigate = useNavigate();
   const [mensagem, setMensagem] = useState("");
 
   const handleChange = (e) => {
@@ -30,16 +32,20 @@ export default function SignUpPage() {
     }
 
     try {
-      // Aqui chamar a API de registo
+      // Gera o hash da password antes de enviar
+      const hashedPassword = await bcrypt.hash(formData.password, 10);
+
       const resposta = await registarUtilizador({
-        nome: `${formData.firstName} ${formData.lastName}`,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         email: formData.email,
         localidade: formData.localidade,
-        password: formData.password
+        password: hashedPassword, // envia já encriptada
       });
 
       if (resposta.sucesso) {
         setMensagem("✅ Conta criada com sucesso!");
+        navigate("/signin");
       } else {
         setMensagem(`❌ ${resposta.mensagem}`);
       }

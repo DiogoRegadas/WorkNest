@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { loginUtilizador } from "../services/api";
 import SignIn from "../components/SignPage/signIn";
 import "../styles/background.css"; // fundo global
+//import bcrypt from "bcryptjs"; // Para encriptar a password antes de enviar
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -15,12 +16,18 @@ export default function SignInPage() {
     setMensagem("");
 
     try {
-      const resposta = await loginUtilizador({ email, password });
+      
+      
+
+      const resposta = await loginUtilizador({
+        email,
+        password
+      });
 
       if (resposta.sucesso) {
         localStorage.setItem("token", resposta.token);
         localStorage.setItem("utilizador", JSON.stringify(resposta.utilizador));
-        navigate("/user");
+        navigate("/home");
       } else {
         setMensagem(`❌ ${resposta.mensagem}`);
       }
@@ -28,7 +35,6 @@ export default function SignInPage() {
       setMensagem(`❌ ${erro.mensagem || "Erro ao fazer login."}`);
     }
   };
-
   return (
     <SignIn
       email={email}

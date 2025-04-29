@@ -1,4 +1,4 @@
-const ProjetoService = require('../services/ProjetoService');
+const ProjetoService = require('../services/projectServices');
 
 exports.criarProjeto = async (req, res) => {
     try {
@@ -12,13 +12,16 @@ exports.criarProjeto = async (req, res) => {
 
 exports.listarProjetos = async (req, res) => {
     try {
-        const resultado = await ProjetoService.listarProjetos();
+        console.log('🔍 ID do utilizador autenticado:', req.user.id);
+        const idUser = req.user.id; 
+        const resultado = await ProjetoService.listarProjetos(idUser);
         return res.status(200).json(resultado);
     } catch (error) {
         console.error("❌ Erro ao listar projetos:", error);
         return res.status(500).json({ sucesso: false, mensagem: 'Erro ao listar projetos.' });
     }
 };
+
 
 exports.obterProjetoPorId = async (req, res) => {
     try {

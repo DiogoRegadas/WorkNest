@@ -6,9 +6,8 @@ class CategoriaModel {
     #listaTopicos;
   
     constructor(nome, descricao, idProjeto) {
-      this.#uid = uid;
       this.#nome = nome;
-      this.#descricao = descricao;
+      this.#descricao = '';
       this.#idProjeto = idProjeto;
       this.#listaTopicos = [];
     }

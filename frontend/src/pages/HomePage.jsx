@@ -1,16 +1,43 @@
-import { Link } from 'react-router-dom';
+import styles from '../components/Home/Home.module.css';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function HomePage() {
+import Navbar from '../components/Home/Navbar/Navbar';
+import Sidebar from '../components/Home/Sidebar/Sidebar';
+import MainContent from '../components/Home/MainContent/MainContent';
+import ExtraPanel from '../components/Home/ExtraPanel/ExtraPanel';
+
+export default function HomePage() {
+
+  const [selectedProject, setSelectedProject] = useState(null); // <- novo
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const navigate = useNavigate();
+
+  const startLogout = () => {
+    setIsLoggingOut(true);
+    setTimeout(() => {
+      localStorage.removeItem("utilizador");
+      localStorage.removeItem("token");
+      navigate("/");
+    }, 1000); // Igual à duração do fade
+  };
+
   return (
-    <div style={{ textAlign: 'center', marginTop: '100px' }}>
-      <h1>Bem-vindo ao WorkNest</h1>
-      <p>Plataforma de colaboração para estudantes e equipas pequenas.</p>
-      <div style={{ marginTop: '30px' }}>
-        <Link to="/signin"><button>Sign In</button></Link>
-        <Link to="/signup" style={{ marginLeft: '20px' }}><button>Sign Up</button></Link>
+    <div className={`${styles.homeContainer} ${isLoggingOut ? styles.fadeOut : ''}`}>
+      <div className={styles.navbar}>
+        <Navbar onStartLogout={startLogout} />
+      </div>
+      <div className={styles.content}>
+        <div className={styles.sidebar}>
+          <Sidebar />
+        </div>
+        <div className={styles.main}>
+        <MainContent setSelectedProject={setSelectedProject} />
+        </div>
+        <div className={styles.extraPanel}>
+        <ExtraPanel selectedProject={selectedProject} /> {/* passamos o selected */}
+        </div>
       </div>
     </div>
   );
 }
-
-export default HomePage;

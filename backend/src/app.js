@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
+const projectRoutes = require('./routes/projectRoutes'); // Exemplo de rota para projetos
 require('dotenv').config();
 const connectDB = require('./config/db');
 const requestLogger  = require('./middlewares/requestLogger');
@@ -23,6 +24,7 @@ app.use(requestLogger); // Regista todas as requisições
 
 // Rotas
 app.use('/api/users', userRoutes);
+app.use('/api/projects', projectRoutes); // Exemplo de rota para projetos
 
 // Rota padrão
 app.get('/', (req, res) => {

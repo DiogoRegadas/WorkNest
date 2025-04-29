@@ -34,3 +34,29 @@ export const obterPerfil = async () => {
       throw erro.response?.data || { mensagem: 'Erro ao obter perfil.' };
     }
   };
+
+  export const criarProjeto = async (dadosProjeto) => {
+    const token = localStorage.getItem('token');
+  
+    try {
+      const resposta = await axios.post(`${API_URL}/projects/criarprojetos`, dadosProjeto, {
+        headers: { Authorization: token }
+      });
+      return resposta.data;
+    } catch (erro) {
+      throw erro.response?.data || { mensagem: 'Erro ao criar projeto.' };
+    }
+  };
+
+
+  export const listarProjetos = async () => {
+    const token = localStorage.getItem('token');
+  
+    const resposta = await axios.get(`${API_URL}/projects/projetos`, {
+      headers: {
+        Authorization: token
+      }
+    });
+  
+    return resposta.data;
+  };

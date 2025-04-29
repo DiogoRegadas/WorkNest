@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
 
-// Definição do esquema
 const UserSchema = new mongoose.Schema({
-    username: { type: String, required: true, trim: true },
-    email: { type: String, required: true },
-    password: { type: String, required: true },
-    nivelAcesso: { type: Number, required: true },
+  firstName: { type: String, required: true, trim: true },
+  lastName: { type: String, required: true, trim: true },
+  localidade: { type: String, required: true, trim: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  nivelAcesso: { type: Number, default: 1 }, // acesso básico por defeito
 }, {
-    timestamps: true, // Campos createdAt e updatedAt
+  timestamps: true,
 });
 
-// Exporta o modelo
 module.exports = mongoose.model('User', UserSchema, 't_user');
+

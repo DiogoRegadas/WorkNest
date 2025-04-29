@@ -1,53 +1,73 @@
 class UserModel {
     #uid;
-    #nome;
+    #firstName;
+    #lastName;
     #email;
+    #localidade;
     #nivelAcesso;
     #dataCriacao;
 
-    constructor(uid, nome, email, nivelAcesso, dataCriacao) {
-        Uid = uid;
-        Nome = nome;
-        Email = email;
-        NivelAcesso = nivelAcesso;
-        DataCriacao = dataCriacao;
+    constructor(uid, firstName, lastName, email, localidade, nivelAcesso, dataCriacao) {
+        this.#uid = uid;
+        this.#firstName = firstName;
+        this.#lastName = lastName;
+        this.#email = email;
+        this.#localidade = localidade;
+        this.#nivelAcesso = nivelAcesso;
+        this.#dataCriacao = dataCriacao;
     }
 
     // Getters
-    get Uid() {
+    get uid() {
         return this.#uid;
     }
 
-    get Nome() {
-        return this.#nome;
+    get firstName() {
+        return this.#firstName;
     }
 
-    get Email() {
+    get lastName() {
+        return this.#lastName;
+    }
+
+    get email() {
         return this.#email;
     }
 
-    get NivelAcesso() {
+    get localidade() {
+        return this.#localidade;
+    }
+
+    get nivelAcesso() {
         return this.#nivelAcesso;
     }
 
-    get DataCriacao() {
+    get dataCriacao() {
         return this.#dataCriacao;
     }
 
     // Setters
-    set Nome(novoNome) {
-        this.#nome = novoNome;
+    set firstName(nome) {
+        this.#firstName = nome;
     }
 
-    set Email(novoEmail) {
+    set lastName(apelido) {
+        this.#lastName = apelido;
+    }
+
+    set email(novoEmail) {
         this.#email = novoEmail;
     }
 
-    set NivelAcesso(novoNivel) {
+    set localidade(novaLocalidade) {
+        this.#localidade = novaLocalidade;
+    }
+
+    set nivelAcesso(novoNivel) {
         this.#nivelAcesso = novoNivel;
     }
 
-    set DataCriacao(novaData) {
+    set dataCriacao(novaData) {
         this.#dataCriacao = novaData;
     }
 }

@@ -1,0 +1,15 @@
+.activitiesList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0; /* tiramos padding se quiseres */
+  }
+  
+  .activityItem {
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #ddd;
+  }
+  

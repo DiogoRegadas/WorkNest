@@ -1,0 +1,9 @@
+.projectList {
+    max-height: 550px; /* <- aumentei */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-right: 6px;
+  }
+  

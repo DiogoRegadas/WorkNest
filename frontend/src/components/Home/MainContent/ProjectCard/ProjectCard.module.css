@@ -1,0 +1,68 @@
+.card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #222;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.5);
+  }
+  
+  .left {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+  }
+  
+  .lastActivity {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-top: 8px;
+  }
+  
+  .separator {
+    width: 2px;
+    background: #444;
+    height: 60px;
+    margin: 0 20px;
+    border-radius: 5px;
+  }
+  
+  .right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  .infoBlock {
+    text-align: center;
+  }
+  
+  .infoLabel {
+    font-size: 0.80rem;
+    color: #bbb;
+  }
+  
+  .infoValue {
+    font-size: 0.80rem; /* Diminuído */
+    font-weight: bold;
+    margin-left: 7px;
+    color: white;
+  }
+  

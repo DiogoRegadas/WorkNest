@@ -1,0 +1,13 @@
+.emptyState {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 1.8rem; /* Bem grande */
+    font-weight: bold; /* Bold */
+    font-style: italic; /* Italic */
+    color: #888; /* Um cinzento elegante */
+    text-align: center;
+    padding: 20px;
+  }
+  

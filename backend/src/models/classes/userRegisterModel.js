@@ -1,52 +1,62 @@
 class UserRegisterModel {
-    #nome;
+    #firstName;
+    #lastName;
+    #localidade;
     #email;
     #password;
-
-    constructor(nome, email, password) {
-        this.nome = nome;
-        this.email = email;
-        this.password = password; // Passa pelo setter
-        
+  
+    constructor(firstName, lastName, localidade, email, password) {
+      this.firstName = firstName;
+      this.lastName = lastName;
+      this.localidade = localidade;
+      this.email = email;
+      this.password = password; // Validação feita no setter
     }
-
+  
     // Getters
-    get nome() {
-        return this.#nome;
+    get firstName() {
+      return this.#firstName;
     }
-
+  
+    get lastName() {
+      return this.#lastName;
+    }
+  
+    get localidade() {
+      return this.#localidade;
+    }
+  
     get email() {
-        return this.#email;
+      return this.#email;
     }
-
+  
     get password() {
-        return this.#password;
+      return this.#password;
     }
-
-    
-    // Setter para validar a password
-    set password(novaPassword) {
-        if (!this.#validarPassword(novaPassword)) {
-            throw new Error('A palavra-passe não cumpre os requisitos de segurança.');
-        }
-        this.#password = novaPassword;
-    }
-
+  
     // Setters
-    set nome(nome) {
-        this.#nome = nome;;
+    set firstName(value) {
+      this.#firstName = value;
     }
-
-    set email(email) {
-        this.#email = email;;
+  
+    set lastName(value) {
+      this.#lastName = value;
     }
-
-
-    // Método privado para validar a password
-    #validarPassword(password) {
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-        return regex.test(password);
+  
+    set localidade(value) {
+      this.#localidade = value;
     }
-}
-
-module.exports = UserRegisterModel;
+  
+    set email(value) {
+      this.#email = value;
+    }
+  
+    set password(value) {
+      this.#password = value;
+    }
+  
+    
+  }
+  
+  module.exports = UserRegisterModel;
+  

@@ -1,0 +1,38 @@
+.propertiesContent {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: #ddd;
+    padding: 6px 0;
+  }
+  
+  .propertyItem {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Um pouco mais de espaço entre título e valor */
+  }
+  
+  .propertyLabel {
+    font-size: 0.8rem;
+    color: #ffffff;
+    font-weight: 700; /* mais bold */
+    text-transform: uppercase;
+    letter-spacing: 0.8px; /* letras mais afastadas */
+    min-width: 110px; /* um pouco maior para alinhar bonito */
+  }
+  
+  .propertyValue {
+    font-size: 0.8rem;
+    color: #ccc;
+    font-weight: 400;
+    flex: 1;
+  }
+  
+  .noProject {
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    margin-top: 10px;
+  }
+  

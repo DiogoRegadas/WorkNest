@@ -11,4 +11,4 @@ const ProjetoSchema = new Schema({
     timestamps: true // Campos createdAt e updatedAt
 });
 
-module.exports = mongoose.model('Projeto', ProjetoSchema, 't_projeto');
+module.exports = mongoose.model('Projeto', ProjetoSchema, 't_project');

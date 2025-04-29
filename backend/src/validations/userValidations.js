@@ -1,18 +1,32 @@
 const Joi = require('joi');
 
+
 const registerUserSchema = Joi.object({
-    nome: Joi.string().min(3).required(),
-    email: Joi.string().email().required(),
-    password: Joi.string()
-      .min(8)
-      .pattern(new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])'))
-      .required()
-      .messages({
-        'string.pattern.base': 'A palavra-passe deve conter pelo menos uma letra minúscula, uma maiúscula, um número e um símbolo especial.',
-        'string.min': 'A palavra-passe deve ter no mínimo 8 caracteres.',
-        'string.empty': 'A palavra-passe é obrigatória.'
-      })
-  });
+  firstName: Joi.string().min(2).required().messages({
+    'string.empty': 'O primeiro nome é obrigatório.',
+    'string.min': 'O primeiro nome deve ter no mínimo 2 caracteres.',
+  }),
+
+  lastName: Joi.string().min(2).required().messages({
+    'string.empty': 'O apelido é obrigatório.',
+    'string.min': 'O apelido deve ter no mínimo 2 caracteres.',
+  }),
+
+  localidade: Joi.string().min(2).required().messages({
+    'string.empty': 'A localidade é obrigatória.',
+    'string.min': 'A localidade deve ter no mínimo 2 caracteres.',
+  }),
+
+  email: Joi.string().email().required().messages({
+    'string.empty': 'O email é obrigatório.',
+    'string.email': 'Formato de email inválido.',
+  }),
+
+  password: Joi.string().required().messages({
+    'string.empty': 'A palavra-passe é obrigatória.'
+  })
+});
+
 
 const loginUserSchema = Joi.object({
     email: Joi.string().email().required(),

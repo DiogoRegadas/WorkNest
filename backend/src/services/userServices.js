@@ -6,29 +6,34 @@ const { registerUserSchema, loginUserSchema } = require('../validations/userVali
 const registerUser = async (dados) => {
     const { error } = registerUserSchema.validate(dados);
     if (error) {
-        return {
-            status: 400,
-            resposta: { sucesso: false, mensagem: error.details[0].message }
-        };
+        console.log("Erro na validação:", error.details[0].message);
+      return {
+        status: 400,
+        resposta: { sucesso: false, mensagem: error.details[0].message }
+      };
     }
-
-    const { nome, email, password } = dados;
-    const newUser = new UserRegisterModel(nome, email, password);
-
+    
+    console.log("Dados recebidos para registo:", dados);
+    const { firstName, lastName, localidade, email, password } = dados;
+  
+    // Criação do utilizador com os novos campos
+    const newUser = new UserRegisterModel(firstName, lastName, localidade, email, password);
+  
     const resultado = await userHelper.createUser(newUser);
-
+  
     if (resultado.sucesso) {
-        return {
-            status: 201,
-            resposta: { sucesso: true, mensagem: resultado.mensagem }
-        };
+      return {
+        status: 201,
+        resposta: { sucesso: true, mensagem: resultado.mensagem }
+      };
     } else {
-        return {
-            status: 400,
-            resposta: { sucesso: false, mensagem: resultado.mensagem }
-        };
+      return {
+        status: 400,
+        resposta: { sucesso: false, mensagem: resultado.mensagem }
+      };
     }
-};
+  };
+  
 
 const loginUser = async (dados) => {
     const { error } = loginUserSchema.validate(dados);

@@ -1,8 +1,10 @@
-const UserService = require('../services/UserService');
+const UserService = require('../services/userServices');
 
 exports.registerUser = async (req, res) => {
     try {
+        console.log("Dados recebidos para registo:", req.body);
         const resultado = await UserService.registerUser(req.body);
+        
         return res.status(resultado.status).json(resultado.resposta);
     } catch (error) {
         console.error("❌ Erro no controller:", error);

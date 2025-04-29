@@ -1,5 +1,5 @@
 const CategoriaModel = require('../models/classes/categoriaModel');
-const Categoria = require('../models/mongoose/categoriaSchema');
+const Categoria = require('../models/database/categoriaMongo');
 
 const criarCategoria = async (dados) => {
     try {

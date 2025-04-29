@@ -1,11 +1,13 @@
 
-const ProjetoModel = require('../models/classes/projetoModel');
-const Projeto = require('../models/database/projetoSchema');
+const ProjetoModel = require('../models/classes/ProjectModel');
+const Projeto = require('../models/database/projectMongo');
+const CategoriaService = require('./categoriaServices');
 
 const criarProjeto = async (dados) => {
     try {
         const novoProjeto = new ProjetoModel(dados.nome, dados.descricao, dados.owner);
 
+        // Primeiro criar o Projeto SEM categorias
         const projetoMongo = new Projeto({
             nome: novoProjeto.nome,
             descricao: novoProjeto.descricao,
@@ -15,10 +17,39 @@ const criarProjeto = async (dados) => {
         });
 
         await projetoMongo.save();
+        console.log('ID DO PROJETO - ', projetoMongo._id);
+
+        const categoriasCriadas = [];
+
+        // Se receber categorias (array de nomes)
+        if (dados.categorias && dados.categorias.length > 0) {
+            // Criar todas as categorias associadas ao projeto
+            for (const categoriaNome of dados.categorias) {
+                const novaCategoria = {
+                    nome: categoriaNome,
+                    descricao: '', // Se quiseres podes receber descrição também
+                    idProjeto: projetoMongo._id
+                };
+                const resultadoCategoria = await CategoriaService.criarCategoria(novaCategoria);
+
+                if (resultadoCategoria.status === 201) {
+                    categoriasCriadas.push(resultadoCategoria.resposta.categoria._id);
+                }
+            }
+
+            // Atualizar o Projeto com as categorias criadas
+            projetoMongo.listaCategorias = categoriasCriadas;
+            await projetoMongo.save();
+        }
+
+        // Popular o projeto atualizado com categorias
+        const projetoFinal = await Projeto.findById(projetoMongo._id)
+            .populate('listaCategorias', 'nome descricao')
+            .populate('owner', 'nome email');
 
         return {
             status: 201,
-            resposta: { sucesso: true, mensagem: 'Projeto criado com sucesso.', projeto: projetoMongo }
+            resposta: { sucesso: true, mensagem: 'Projeto criado com sucesso.', projeto: projetoFinal }
         };
     } catch (error) {
         console.error("❌ Erro no serviço ao criar projeto:", error);
@@ -29,8 +60,16 @@ const criarProjeto = async (dados) => {
     }
 };
 
-const listarProjetos = async () => {
-    const projetos = await Projeto.find().populate('owner', 'nome email');
+const listarProjetos = async (idUser) => {
+    const projetos = await Projeto.find({
+      $or: [
+        { owner: idUser },
+        { listaUtilizadores: idUser }
+      ]
+    }).populate('owner', 'firstName lastName email');
+
+    //console.log(JSON.stringify(projetos, null, 2));
+
     return { sucesso: true, projetos };
 };
 

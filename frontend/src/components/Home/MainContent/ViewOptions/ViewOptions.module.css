@@ -1,0 +1,24 @@
+.viewOptions {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+  }
+  
+  .dropdown {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border: none;
+    font-size: 0.85rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    height: 32px; /* Baixar altura */
+  }
+  
+  .dropdown option {
+    background: #222;
+    color: white;
+  }
+  

@@ -8,7 +8,6 @@ class ProjetoModel {
     #listaCategorias;
   
     constructor(nome, descricao, ownerId) {
-      this.#idProjeto = idProjeto; // ou usa mongoose._id depois
       this.#nome = nome || '';
       this.#descricao = descricao || '';
       this.#dataCriacao = new Date();
