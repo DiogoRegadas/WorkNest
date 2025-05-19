@@ -1,0 +1,158 @@
+.modal {
+    background-color: #1f1f1f;
+    padding: 32px;
+    border-radius: 12px;
+    width: 500px;
+    max-height: 85vh;
+    margin-left: 80px;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 0 25px rgba(0,0,0,0.6);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+  
+  h2 {
+    margin-top: 0;
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+  }
+  
+  .searchInput {
+    width: 90%;
+    padding: 12px 16px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background-color: #2a2a2a;
+    color: white;
+    font-size: 1rem;
+    margin-bottom: 24px;
+  }
+  
+  .results {
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 45vh; /* altura limitada para scroll */
+    padding-right: 4px;
+  }
+  
+  .placeholder {
+    text-align: center;
+    color: #888;
+    margin-top: 30px;
+    font-style: italic;
+  }
+  
+  .userCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #2b2b2b;
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 16px;
+  }
+  
+  .userInfo {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .identifier {
+    font-size: 0.75rem;
+    color: #aaa;
+  }
+  
+  .sendButton {
+    background-color: #3b82f6;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+  }
+  
+  .sendButton:hover {
+    background-color: #2563eb;
+  }
+  
+  .sentButton {
+    background-color: #444;
+    color: #bbb;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: default;
+    font-size: 0.9rem;
+  }
+  
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(1px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* <- atualmente alinha no topo */
+    z-index: 1000;
+    padding-top: 10%; /* ← espaçamento a partir do topo */
+  }
+
+  /* Estados */
+  .fadeIn {
+    animation: fadeZoomIn 0.4s ease forwards;
+  }
+  
+  .fadeOut {
+    animation: fadeZoomOut 0.4s ease forwards;
+  }
+  
+  /* Animações */
+  @keyframes fadeZoomIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes fadeZoomOut {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+  }

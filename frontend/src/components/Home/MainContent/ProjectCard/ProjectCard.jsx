@@ -1,4 +1,8 @@
 import styles from './ProjectCard.module.css';
+import { useNavigate } from 'react-router-dom';
+
+
+
 
 // Atualizar a função formatTimeAgo para inglês e correto
 const formatTimeAgo = (dateString) => {
@@ -16,8 +20,15 @@ const formatTimeAgo = (dateString) => {
 };
 
 export default function ProjectCard({ project }) {
+
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/projeto/${project._id}`); // envia o ID do projeto
+  };
+
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={handleClick}>
       {/* Left Side */}
       <div className={styles.left}>
         <h3 className={styles.title}>{project.nome}</h3>

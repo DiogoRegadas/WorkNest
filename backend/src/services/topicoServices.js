@@ -1,7 +1,10 @@
 // backend/src/services/TopicoService.js
 
-const TopicoModel = require('../models/classes/topicoModel');
-const Topico = require('../models/mongoose/topicoSchema');
+const TopicoModel = require('../models/classes/topicModel');
+const Topico = require('../models/mongoose/topicMongo');
+const ProjetoService = require('./projectServices');
+const Categoria = require('../models/mongoose/categoriaMongo');
+const { getIO } = require('../socketServer');
 
 const criarTopico = async (dados) => {
     try {
@@ -16,6 +19,19 @@ const criarTopico = async (dados) => {
         });
 
         await topicoMongo.save();
+
+        await Categoria.findByIdAndUpdate(dados.idCategoria, {
+            $push: { listaTopicos: topicoMongo._id }
+          });
+
+        // 🔁 Emitir projeto completo atualizado
+        const io = getIO();
+        const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(dados.idProjeto);
+
+        if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
+            io.to(`projeto:${dados.idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
+            console.log(`📢 Projeto completo emitido via WebSocket para sala projeto:${dados.idProjeto}`);
+        }
 
         return {
             status: 201,
@@ -58,14 +74,24 @@ const obterTopicoPorId = async (id) => {
 };
 
 const atualizarTopico = async (id, dados) => {
+    console.log("11111111");
     try {
-        const topico = await Topico.findByIdAndUpdate(id, dados, { new: true });
+        const topico = await Topico.findByIdAndUpdate(id, dados.titulo, { new: true });
         if (!topico) {
             return {
                 status: 404,
                 resposta: { sucesso: false, mensagem: 'Tópico não encontrado.' }
             };
         }
+
+        const io = getIO();
+        const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(dados.idProjeto);
+
+        if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
+            io.to(`projeto:${dados.idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
+            console.log(`📢 Projeto atualizado emitido via WebSocket para sala projeto:${dados.idProjeto}`);
+        }
+
         return {
             status: 200,
             resposta: { sucesso: true, mensagem: 'Tópico atualizado com sucesso.', topico }
@@ -88,6 +114,12 @@ const apagarTopico = async (id) => {
                 resposta: { sucesso: false, mensagem: 'Tópico não encontrado.' }
             };
         }
+
+        const io = getIO();
+        const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(topico.idProjeto);
+        if (resultadoProjeto.status === 200) {
+        io.to(`projeto:${topico.idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
+        }
         return {
             status: 200,
             resposta: { sucesso: true, mensagem: 'Tópico apagado com sucesso.' }
@@ -101,10 +133,68 @@ const apagarTopico = async (id) => {
     }
 };
 
+const arquivarTopico = async (id, dados) => {
+    const topico = await Topico.findById(id);
+    if (!topico) {
+      return {
+        status: 404,
+        resposta: { sucesso: false, mensagem: 'Tópico não encontrado.' },
+      };
+    }
+  
+    topico.isArchived = true;
+    await topico.save();
+
+    const io = getIO();
+    const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(dados.idProjeto);
+
+    if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
+        io.to(`projeto:${dados.idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
+        console.log(`📢 Projeto atualizado emitido via WebSocket para sala projeto:${dados.idProjeto}`);
+    }
+  
+    return {
+      status: 200,
+      resposta: { sucesso: true, mensagem: 'Tópico arquivado com sucesso.', topico },
+    };
+  };
+  
+  const desarquivarTopico = async (id, dados) => {
+    console.log("-----------------------------");
+    console.log("Service");
+    const topico = await Topico.findById(id);
+    if (!topico) {
+      return {
+        status: 404,
+        resposta: { sucesso: false, mensagem: 'Tópico não encontrado.' },
+      };
+    }
+  
+    topico.isArchived = false;
+    await topico.save();
+
+    console.log("Desarquivar tópico:", topico);
+  
+    const io = getIO();
+    const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(dados.idProjeto);
+    console.log("Resultado projeto:", dados.idProjeto);
+    if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
+      io.to(`projeto:${dados.idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
+      console.log(`📢 Projeto atualizado emitido via WebSocket para sala projeto:${dados.idProjeto}`);
+    }
+  
+    return {
+      status: 200,
+      resposta: { sucesso: true, mensagem: 'Tópico desarquivado com sucesso.', topico },
+    };
+  };
+
 module.exports = {
     criarTopico,
     listarTopicos,
     obterTopicoPorId,
     atualizarTopico,
-    apagarTopico
+    apagarTopico,
+    arquivarTopico,
+    desarquivarTopico
 };

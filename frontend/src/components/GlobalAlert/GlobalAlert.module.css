@@ -1,0 +1,150 @@
+/* src/components/GlobalAlert/GlobalAlert.module.css */
+.alert {
+    position: fixed;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 280px;
+    z-index: 9999;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: white;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .sucesso {
+    background-color: #1f4036;
+  }
+  
+  .erro {
+    background-color: #4a1e1e;
+  }
+  
+  .icon {
+    font-size: 1.2rem
+  }
+
+
+  /* GlobalAlert.module.css */
+
+  .confirmOverlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+  
+  .confirmBox {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    padding: 2.5rem 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.08);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    animation: slideUp 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  
+  .confirmMessage {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 2.2rem;
+    line-height: 1.6;
+  }
+  
+  .confirmButtons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .confirmButton {
+    min-width: 140px;
+    padding: 1rem 2rem;
+    border-radius: 999px;
+    border: 3px solid;
+    background-color: transparent;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.5px;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  }
+  
+  /* Botão SIM */
+  .confirmYes {
+    width: 90px;
+    height: 30px;
+    border-radius: 6px;
+    border: 1px solid;
+    border-color: #4ade80;
+    background-color: transparent;
+    color: #4ade80;
+    transition: all 0.2s ease;
+  }
+  
+  .confirmYes:hover {
+    background-color: #4ade80;
+    color: white;
+  }
+  
+  /* Botão NÃO */
+  .confirmNo {
+    margin-left: 30px;
+    height: 30px;
+    width: 90px;
+    border: 1px solid;
+    border-radius: 6px;
+    border-color: #f87171;
+    background-color: transparent;
+    color: #f87171;
+    transition: all 0.2s ease;
+  }
+  
+  .confirmNo:hover {
+    background-color: #f87171;
+    color: white;
+  }
+  
+  /* Ícones */
+  .confirmIcon {
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s ease;
+  }
+  
+  
+  @keyframes fadeIn {
+    from { opacity: 0 }
+    to { opacity: 1 }
+  }
+  
+  @keyframes slideUp {
+    from {
+      transform: translateY(40px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  

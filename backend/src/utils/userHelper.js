@@ -1,4 +1,4 @@
-const User = require('../models/database/userMongo'); // Mongoose schema
+const User = require('../models/mongoose/userMongo'); // Mongoose schema
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -51,10 +51,16 @@ const createUser = async (userModel) => {
             { expiresIn: process.env.JWT_EXPIRES || '1h' }
         );
 
+        const refreshToken = jwt.sign({ id: user._id, email: user.email }, process.env.REFRESH_SECRET, { expiresIn: '12h' });
+
+        console.log('refresh token', refreshToken);
+
+        const identificador = `#${user._id.toString().slice(-4)}`;
         return {
             sucesso: true,
             mensagem: 'Login efetuado com sucesso.',
             token,
+            refreshToken,
             utilizador: {
               id: user._id,
               firstName: user.firstName,
@@ -62,7 +68,8 @@ const createUser = async (userModel) => {
               email: user.email,
               localidade: user.localidade,
               nivelAcesso: user.nivelAcesso,
-              dataCriacao: user.createdAt
+              dataCriacao: user.createdAt,
+              identificador
             }
           };
     } catch (erro) {

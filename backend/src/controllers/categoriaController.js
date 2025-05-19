@@ -1,4 +1,4 @@
-const CategoriaService = require('../services/CategoriaService');
+const CategoriaService = require('../services/categoriaServices');
 
 exports.criarCategoria = async (req, res) => {
     try {
@@ -47,5 +47,25 @@ exports.apagarCategoria = async (req, res) => {
     } catch (error) {
         console.error("❌ Erro ao apagar categoria:", error);
         return res.status(500).json({ sucesso: false, mensagem: 'Erro ao apagar categoria.' });
+    }
+};
+
+exports.arquivar = async (req, res) => {
+    try {
+      const resultado = await CategoriaService.arquivarCategoria(req.params.id);
+      return res.status(resultado.status).json(resultado.resposta);
+    } catch (error) {
+      console.error("❌ Erro ao arquivar categoria:", error);
+      return res.status(500).json({ sucesso: false, mensagem: 'Erro ao arquivar categoria.' });
+    }
+  };
+  
+  exports.desarquivar = async (req, res) => {
+    try {
+      const resultado = await CategoriaService.desarquivarCategoria(req.params.id);
+      return res.status(resultado.status).json(resultado.resposta);
+    } catch (error) {
+      console.error("❌ Erro ao desarquivar categoria:", error);
+      return res.status(500).json({ sucesso: false, mensagem: 'Erro ao desarquivar categoria.' });
     }
 };

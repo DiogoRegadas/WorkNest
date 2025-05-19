@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   nivelAcesso: { type: Number, default: 1 }, // acesso básico por defeito
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 }, {
   timestamps: true,
 });

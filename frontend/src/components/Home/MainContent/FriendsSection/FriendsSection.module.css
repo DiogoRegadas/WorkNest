@@ -1,0 +1,82 @@
+.friendsContainer {
+  position: relative; /* necessário para posicionar o modal */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.topBar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.searchInput {
+  flex-grow: 1;
+  padding: 10px 14px;
+  border: 1px solid #555;
+  border-radius: 6px;
+  background-color: #1e1e1e;
+  color: white;
+  font-size: 1rem;
+}
+
+.addButton {
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.addButton:hover {
+  background-color: #666;
+}
+
+.icon {
+  font-size: 1.1rem;
+}
+
+.modalWrapper {
+  position: absolute;
+  top: 72px; /* ajusta conforme a altura da topBar */
+  left: 20px;
+  right: 20px;
+  z-index: 5;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.friendsCount {
+  margin-top: 12px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #999;
+}
+
+.contentWrapper {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.noFriendsMessage {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #aaa;
+  text-align: center;
+  margin-top: 40px;
+}

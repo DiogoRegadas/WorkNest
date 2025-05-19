@@ -1,0 +1,210 @@
+.amigosPanel {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-right: 4px;
+    color: white;
+  }
+  
+  /* Scroll apenas nos recebidos */
+  .recebidosWrapper {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 45%; 
+    padding-right: 6px;
+    padding-top: 10px;
+    
+  }
+  
+  /* Fixa os enviados abaixo da área scrollável */
+  .enviadosFixed {
+    flex-shrink: 0;
+    padding: 0 16px 16px;
+    background-color: transparent;
+    max-height: 45%; /* visível na metade superior */
+    overflow-y: auto;
+    box-sizing: border-box;
+    margin-top: 12px;
+    margin-top: 70px;
+    position: relative;
+  }
+  
+  /* Título fixo */
+  .enviadosFixed h3 {
+    position: sticky;
+    top: 0;
+    background-color: transparent;
+    padding: 8px 0;
+    font-size: 1.2rem;
+    z-index: 2;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  
+  /* Cartões */
+  .card {
+    background-color: #1f1f1f;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: background 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+  }
+  
+  .card:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+  
+  .topSection {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .nameBlock {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .nameBlock strong {
+    font-size: 0.95rem;
+    line-height: 1.1;
+  }
+  
+  .card strong {
+    font-size: 0.95rem;
+  }
+  
+  .identifier {
+    font-size: 0.8rem;
+    color: #888;
+  }
+  
+  .status {
+    font-size: 0.85rem;
+    color: #bbb;
+    font-style: italic;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 6px; /* pequeno espaço entre os dois botões */
+  }
+  
+  .actions button {
+    flex: 1;
+    padding: 8px 0;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tabWithNotification {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .tabNotificationDot {
+    position: absolute;
+    top: -4px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
+    line-height: 1;
+    min-width: 16px;
+    text-align: center;
+  }
+  
+  
+  /* Verde */
+  .accept {
+    border: 1px solid #00c97d;
+    color: #00c97d;
+  }
+  
+  .accept:hover {
+    background-color: #00c97d;
+    color: white;
+  }
+  
+  /* Vermelho */
+  .reject {
+    border: 1px solid #e74c3c;
+    color: #e74c3c;
+  }
+  
+  .reject:hover {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .leftInfo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .userText {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+  
+  .pending {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-left: 46px;
+  }
+  
+  .placeholder {
+    font-style: italic;
+    color: #888;
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.9rem;
+  }
+
+  .enviadosTitleWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+  }
+  
+  .enviadosTitleWrapper .notificationDot {
+    background-color: red;
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 999px;
+    min-width: 18px;
+    text-align: center;
+    position: relative;
+    top: -1px;
+  }
+  
+  

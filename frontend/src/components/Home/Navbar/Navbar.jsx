@@ -3,6 +3,17 @@ import styles from "./Navbar.module.css";
 import ProfileModal from './ProfileModal/ProfileModal';
 
 export default function Navbar({onStartLogout}) {
+
+  const avatarImages = [
+    'https://i.pravatar.cc/150?img=3',
+    'https://i.pravatar.cc/150?img=5',
+    'https://i.pravatar.cc/150?img=8',
+    'https://i.pravatar.cc/150?img=10',
+    'https://i.pravatar.cc/150?img=12'
+  ];
+  
+  const randomIndex = Math.floor(Math.random() * avatarImages.length);
+  const [avatarUrl] = useState(avatarImages[randomIndex]);
   const [user, setUser] = useState({ firstName: "", lastName: "" });
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [hovering, setHovering] = useState(false);
@@ -15,6 +26,7 @@ export default function Navbar({onStartLogout}) {
       setUser({
         firstName: parsedUser.firstName || "",
         lastName: parsedUser.lastName || "",
+        identificador: parsedUser.identificador || ""
       });
     }
   }, []);
@@ -48,10 +60,14 @@ export default function Navbar({onStartLogout}) {
           className={styles.userBox}
           onClick={() => setShowProfileModal(!showProfileModal)}
         >
-          <div className={styles.avatar}></div>
+          <img src={avatarUrl} alt="avatar" className={styles.avatar} />
           <div className={styles.userName}>
-            {user.firstName} {user.lastName}
+            <span className={styles.userFullName}>
+              {user.firstName} {user.lastName}
+            </span>
+            <span className={styles.userId}>{user.identificador}</span>
           </div>
+
         </div>
 
         {showProfileModal && (

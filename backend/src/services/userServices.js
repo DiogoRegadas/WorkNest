@@ -2,6 +2,9 @@ const UserRegisterModel = require('../models/classes/userRegisterModel');
 const UserLoginModel = require('../models/classes/userLoginModel');
 const userHelper = require('../utils/userHelper');
 const { registerUserSchema, loginUserSchema } = require('../validations/userValidations');
+const User = require('../models/mongoose/userMongo');
+const Pedido = require('../models/mongoose/PedidoMongo');
+
 
 const registerUser = async (dados) => {
     const { error } = registerUserSchema.validate(dados);
@@ -47,6 +50,8 @@ const loginUser = async (dados) => {
     const user = new UserLoginModel(dados.email, dados.password);
     const resultado = await userHelper.loginUser(user);
 
+
+
     if (resultado.sucesso) {
         return {
             status: 200,
@@ -54,7 +59,9 @@ const loginUser = async (dados) => {
                 sucesso: true,
                 mensagem: resultado.mensagem,
                 token: resultado.token,
-                utilizador: resultado.utilizador
+                refreshToken: resultado.refreshToken,
+                utilizador: resultado.utilizador,
+                
             }
         };
     } else {
@@ -73,8 +80,60 @@ const getUserProfile = async (userData) => {
     };
 };
 
+const pesquisarUtilizadores = async (termo, idAtual) => {
+  if (!termo || termo.trim() === '') return [];
+
+  
+  const regex = new RegExp(termo, 'i'); // insensitive
+  const utilizadores = await User.find({
+    $or: [
+      { firstName: regex },
+      { lastName: regex }
+    ],
+    _id: { $ne: idAtual }
+  }).select('_id firstName lastName email');
+
+  const pedidos = await Pedido.find({
+    de: idAtual,
+    tipo: 'amizade',
+    estado: 'pendente'
+  }).select('para');
+
+  const idsComPedido = pedidos.map(p => p.para.toString());
+
+  // Acrescentar identificador virtual
+  const resultado = utilizadores.map(u => ({
+    _id: u._id,
+    firstName: u.firstName,
+    lastName: u.lastName,
+    identificador: `#${u._id.toString().slice(-4)}`,
+    pedidoEnviado: idsComPedido.includes(u._id.toString())
+  }));
+
+  return resultado;
+};
+
+const obterAmigos = async (idUser) => {
+  try {
+    const utilizador = await User.findById(idUser).populate('friends', 'firstName lastName _id');
+    return {
+      status: 200,
+      resposta: { sucesso: true, amigos: utilizador.friends || [] }
+    };
+  } catch (error) {
+    console.error("❌ Erro ao obter amigos:", error);
+    return {
+      status: 500,
+      resposta: { sucesso: false, mensagem: 'Erro ao obter amigos.' }
+    };
+  }
+};
+
+
 module.exports = {
     registerUser,
     loginUser,
-    getUserProfile
+    getUserProfile,
+    pesquisarUtilizadores
+    , obterAmigos
 };

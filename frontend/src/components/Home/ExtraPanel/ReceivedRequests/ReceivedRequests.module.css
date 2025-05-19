@@ -1,0 +1,180 @@
+.receivedContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin-top: 8px; 
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+  }
+  
+  .tabs button {
+    position: relative;
+    flex: 1;
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 0.9rem;
+    padding: 6px 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .tabs button:hover {
+    color: white;
+  }
+  
+  .tabs .active {
+    color: white;
+    border-bottom: 2px solid white;
+    font-weight: 500;
+  }
+  
+  .card {
+    background-color: #1f1f1f;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .topSection {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .userText {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .userText strong {
+    font-size: 0.95rem;
+  }
+  
+  .identifier {
+    font-size: 0.8rem;
+    color: #888;
+  }
+  
+  .avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .projectInvite {
+    font-size: 0.9rem;
+    color: white;
+  }
+  
+  .projectName {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #00ffd5;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  
+  .accept,
+  .reject {
+    flex: 1;
+    border: 1px solid;
+    padding: 8px 0;
+    font-size: 0.9rem;
+    border-radius: 0 0 0 0;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .accept {
+    border-color: #00c97d;
+    color: #00c97d;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+  
+  .reject {
+    border-color: #e74c3c;
+    color: #e74c3c;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+  
+  .accept:hover {
+    background-color: #00c97d;
+    color: white;
+  }
+  
+  .reject:hover {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .placeholder {
+    font-style: italic;
+    color: #888;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 12px;
+  }
+  
+  .fadeOut {
+    animation: fadeOutCard 0.5s forwards;
+  }
+  
+  @keyframes fadeOutCard {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+
+
+  .dot {
+    display: inline-block;
+    margin-left: 6px;
+    background-color: red;
+    color: white;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    line-height: 1;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  .pill {
+    position: absolute;
+    top: 2px;
+    right: 6px;
+    width: 6px;
+    height: 6px;
+    background-color: red;
+    border-radius: 10px;
+    z-index: 2;
+  }
+  

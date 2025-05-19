@@ -15,4 +15,4 @@ const TarefaSchema = new Schema({
   timestamps: true
 });
 
-module.exports = mongoose.model('Tarefa', TarefaSchema);
+module.exports = mongoose.model('Tarefa', TarefaSchema, 't_tarefas');

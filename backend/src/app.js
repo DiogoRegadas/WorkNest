@@ -3,6 +3,10 @@ const express = require('express');
 const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const projectRoutes = require('./routes/projectRoutes'); // Exemplo de rota para projetos
+const pedidoRoutes = require('./routes/pedidoRoutes');
+const topicoRoutes = require('./routes/topicRoutes');
+const categoriaRoutes = require('./routes/categoriaRoutes');
+const authRoutes = require('./routes/authRoutes');
 require('dotenv').config();
 const connectDB = require('./config/db');
 const requestLogger  = require('./middlewares/requestLogger');
@@ -25,6 +29,10 @@ app.use(requestLogger); // Regista todas as requisições
 // Rotas
 app.use('/api/users', userRoutes);
 app.use('/api/projects', projectRoutes); // Exemplo de rota para projetos
+app.use('/api/pedidos', pedidoRoutes);
+app.use('/api/topicos', topicoRoutes);
+app.use('/api/categorias', categoriaRoutes);
+app.use('/api/auth', authRoutes);
 
 // Rota padrão
 app.get('/', (req, res) => {

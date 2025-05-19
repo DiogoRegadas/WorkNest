@@ -10,7 +10,14 @@
   .propertyItem {
     display: flex;
     align-items: center;
-    gap: 12px; /* Um pouco mais de espaço entre título e valor */
+    gap: 12px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12); /* mais visível */
+  }
+  
+  .propertyItem:last-child {
+    border-bottom: none; /* remove linha no último item */
   }
   
   .propertyLabel {

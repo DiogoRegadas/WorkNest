@@ -1,0 +1,26 @@
+/* src/pages/NotFoundPage.module.css */
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    background-color: #121212;
+  }
+  
+  .link {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #00ffd5;
+    color: black;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.3s;
+  }
+  
+  .link:hover {
+    background-color: #00ccb2;
+  }
+  

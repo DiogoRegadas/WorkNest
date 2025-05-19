@@ -2,39 +2,35 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUtilizador } from "../services/api";
 import SignIn from "../components/SignPage/signIn";
-import "../styles/background.css"; // fundo global
-//import bcrypt from "bcryptjs"; // Para encriptar a password antes de enviar
+import "../styles/background.css";
+import { useAlert } from "../context/AlertContext"; // <== IMPORTAR
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mensagem, setMensagem] = useState("");
   const navigate = useNavigate();
+  const { showAlert } = useAlert(); // <== USAR ALERTA
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMensagem("");
 
     try {
-      
-      
-
-      const resposta = await loginUtilizador({
-        email,
-        password
-      });
+      const resposta = await loginUtilizador({ email, password });
 
       if (resposta.sucesso) {
         localStorage.setItem("token", resposta.token);
+        localStorage.setItem("refreshToken", resposta.refreshToken);
         localStorage.setItem("utilizador", JSON.stringify(resposta.utilizador));
+        showAlert("✅ Login successful!", "sucesso"); // ✅
         navigate("/home");
       } else {
-        setMensagem(`❌ ${resposta.mensagem}`);
+        showAlert(`❌ ${resposta.mensagem}`, "erro"); // ❌
       }
     } catch (erro) {
-      setMensagem(`❌ ${erro.mensagem || "Erro ao fazer login."}`);
+      showAlert(`❌ ${erro.mensagem || "Erro ao fazer login."}`, "erro");
     }
   };
+
   return (
     <SignIn
       email={email}
@@ -42,7 +38,6 @@ export default function SignInPage() {
       password={password}
       setPassword={setPassword}
       onSubmit={handleSubmit}
-      mensagem={mensagem}
     />
   );
 }

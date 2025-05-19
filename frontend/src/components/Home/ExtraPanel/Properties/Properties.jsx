@@ -7,11 +7,31 @@ export default function Properties({ selectedProject }) {
 
   return (
     <div className={styles.propertiesContent}>
-      <h3>{selectedProject.nome}</h3>
-      <p><strong>Description:</strong> {selectedProject.descricao}</p>
-      <p><strong>Owner:</strong> {selectedProject.owner ? `${selectedProject.owner.firstName} ${selectedProject.owner.lastName}` : 'Unknown Owner'}
-      </p>
-      <p><strong>Categories:</strong> {selectedProject.listaCategorias?.length || 0}</p>
+      <div className={styles.propertyItem}>
+        <span className={styles.propertyLabel}>Name:</span>
+        <span className={styles.propertyValue}>{selectedProject.nome}</span>
+      </div>
+
+      <div className={styles.propertyItem}>
+        <span className={styles.propertyLabel}>Description:</span>
+        <span className={styles.propertyValue}>
+          {selectedProject.descricao || 'No description'}
+        </span>
+      </div>
+
+      <div className={styles.propertyItem}>
+        <span className={styles.propertyLabel}>Owner:</span>
+        <span className={styles.propertyValue}>
+          {selectedProject.owner ? `${selectedProject.owner.firstName} ${selectedProject.owner.lastName}` : 'Unknown Owner'}
+        </span>
+      </div>
+
+      <div className={styles.propertyItem}>
+        <span className={styles.propertyLabel}>Categories:</span>
+        <span className={styles.propertyValue}>
+          {selectedProject.listaCategorias?.length || 0}
+        </span>
+      </div>
     </div>
   );
 }

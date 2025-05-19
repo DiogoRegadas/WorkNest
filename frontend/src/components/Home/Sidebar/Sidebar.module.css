@@ -12,8 +12,10 @@
 }
 
 .menuItem {
+  position: relative; /* necessário para posicionar a notificação */
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   padding: 14px 16px;
   border-radius: 10px;
@@ -27,6 +29,12 @@
   background-color: #333;
 }
 
+.menuItemContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .active {
   background-color: #555;
   font-weight: bold;
@@ -34,6 +42,32 @@
 
 .icon {
   font-size: 22px;
+}
+
+.notificationWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.notificationDot {
+  position: absolute;
+  top: 18px;         /* Mais para baixo */
+  right: 5px;
+  background-color: #ff3b7a;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 7px;
+  border-radius: 999px;
+  min-width: 20px;
+  text-align: center;
+  line-height: 1.1;
+  box-shadow: 0 0 8px rgba(255, 59, 122, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.menuItem:hover .notificationDot {
+  transform: scale(1.1);
 }
 
 /* Mais espaço acima do separador */

@@ -47,8 +47,8 @@
 .userBox {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.04); /* estava 0.05, suavizei mais */
+  border: 1px solid rgba(255, 255, 255, 0.25); 
   border-radius: 12px;
   padding: 8px 12px;
   gap: 10px;
@@ -63,8 +63,8 @@
 
 /* Avatar da pessoa */
 .avatar {
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: #ccc;
   object-fit: cover;
@@ -128,4 +128,17 @@
 .modalText {
   color: white;
   font-size: 0.95rem;
+}
+
+.userFullName {
+  font-size: 1rem;
+  font-weight: 600;
+  display: block;
+  color: white;
+}
+
+.userId {
+  font-size: 0.75rem;
+  color: #bbb;
+  margin-left: 4px;
 }

@@ -1,6 +1,6 @@
 
 const ProjetoModel = require('../models/classes/ProjectModel');
-const Projeto = require('../models/database/projectMongo');
+const Projeto = require('../models/mongoose/projectMongo');
 const CategoriaService = require('./categoriaServices');
 
 const criarProjeto = async (dados) => {
@@ -75,25 +75,25 @@ const listarProjetos = async (idUser) => {
 
 const obterProjetoPorId = async (id) => {
     try {
-        const projeto = await Projeto.findById(id).populate('owner', 'nome email');
-        if (!projeto) {
-            return {
-                status: 404,
-                resposta: { sucesso: false, mensagem: 'Projeto não encontrado.' }
-            };
-        }
+      const projeto = await Projeto.findById(id).populate('owner', 'firstName lastName email');
+      if (!projeto) {
         return {
-            status: 200,
-            resposta: { sucesso: true, projeto }
+          status: 404,
+          resposta: { sucesso: false, mensagem: 'Projeto não encontrado.' }
         };
+      }
+      return {
+        status: 200,
+        resposta: { sucesso: true, projeto }
+      };
     } catch (error) {
-        console.error("❌ Erro ao obter projeto:", error);
-        return {
-            status: 500,
-            resposta: { sucesso: false, mensagem: 'Erro ao obter projeto.' }
-        };
+      console.error("❌ Erro ao obter projeto:", error);
+      return {
+        status: 500,
+        resposta: { sucesso: false, mensagem: 'Erro ao obter projeto.' }
+      };
     }
-};
+  };
 
 const atualizarProjeto = async (id, dados) => {
     try {
@@ -139,10 +139,78 @@ const apagarProjeto = async (id) => {
     }
 };
 
+const obterProjetoCompletoPorId = async (idProjeto) => {
+    try {
+      const projeto = await Projeto.findById(idProjeto).populate('owner', 'firstName lastName');
+      if (!projeto) {
+        return {
+          status: 404,
+          resposta: { sucesso: false, mensagem: 'Projeto não encontrado.' }
+        };
+      }
+  
+      const categoriasComTopicos = [];
+      for (const idCategoria of projeto.listaCategorias) {
+        const categoria = await CategoriaService.obterCategoriaComTopicos(idCategoria);
+        if (categoria) {
+          categoriasComTopicos.push(categoria);
+        }
+      }
+
+      console.log(`📁 Projeto: ${projeto.nome} (${projeto._id})`);
+
+      if (Array.isArray(categoriasComTopicos)) {
+        categoriasComTopicos.forEach((cat, index) => {
+          console.log(`  📂 Categoria ${index + 1}: ${cat.nome} (${cat._id})`);
+      
+          if (Array.isArray(cat.topicos) && cat.topicos.length > 0) {
+            cat.topicos.forEach((topico, i) => {
+              console.log(`    📝 Tópico ${i + 1}: ${topico.titulo} (${topico._id})`);
+      
+              const numTarefas = Array.isArray(topico.listaTarefas) ? topico.listaTarefas.length : 0;
+              const numMensagens = Array.isArray(topico.listaMensagens) ? topico.listaMensagens.length : 0;
+      
+              if (numTarefas > 0 || numMensagens > 0) {
+                console.log(`      📌 Tarefas: ${numTarefas} | 💬 Mensagens: ${numMensagens}`);
+              } else {
+                console.log(`      ⚠️ Sem tarefas nem mensagens`);
+              }
+            });
+          } else {
+            console.log(`    ⚠️ Sem tópicos`);
+          }
+        });
+      }
+
+
+  
+      return {
+        status: 200,
+        resposta: {
+          sucesso: true,
+          projeto: {
+            _id: projeto._id,
+            nome: projeto.nome,
+            descricao: projeto.descricao,
+            owner: projeto.owner,
+            categorias: categoriasComTopicos
+          }
+        }
+      };
+    } catch (error) {
+      console.error('❌ Erro ao obter projeto completo:', error);
+      return {
+        status: 500,
+        resposta: { sucesso: false, mensagem: 'Erro ao obter projeto completo.' }
+      };
+    }
+  };
+
 module.exports = {
     criarProjeto,
     listarProjetos,
     obterProjetoPorId,
     atualizarProjeto,
-    apagarProjeto
+    apagarProjeto,
+    obterProjetoCompletoPorId
 };

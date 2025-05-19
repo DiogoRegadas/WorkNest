@@ -25,13 +25,16 @@ exports.listarProjetos = async (req, res) => {
 
 exports.obterProjetoPorId = async (req, res) => {
     try {
-        const resultado = await ProjetoService.obterProjetoPorId(req.params.id);
-        return res.status(resultado.status).json(resultado.resposta);
+      const id = req.params.id;
+  
+      const resultado = await ProjectService.obterProjetoCompleto(id);
+  
+      return res.status(resultado.status).json(resultado.resposta);
     } catch (error) {
-        console.error("❌ Erro ao obter projeto:", error);
-        return res.status(500).json({ sucesso: false, mensagem: 'Erro ao obter projeto.' });
+      console.error("❌ Erro ao obter projeto:", error);
+      return res.status(500).json({ sucesso: false, mensagem: 'Erro interno ao obter projeto.' });
     }
-};
+  };
 
 exports.atualizarProjeto = async (req, res) => {
     try {
@@ -52,3 +55,20 @@ exports.apagarProjeto = async (req, res) => {
         return res.status(500).json({ sucesso: false, mensagem: 'Erro ao apagar projeto.' });
     }
 };
+
+exports.obterProjetoCompleto = async (req, res) => {
+  const { id } = req.params;
+    try {
+        const projeto = await ProjetoService.obterProjetoCompletoPorId(id);
+        if (!projeto) {
+            return res.status(404).json({ sucesso: false, mensagem: 'Projeto não encontrado.' });
+        }
+        return res.status(200).json({ sucesso: true, projeto });
+    }
+  catch (error) {
+        console.error("❌ Erro ao obter projeto:", error);
+        return res.status(500).json({ sucesso: false, mensagem: 'Erro ao obter projeto.' });
+    }
+  
+};
+
