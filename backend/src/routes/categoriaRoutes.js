@@ -1,6 +1,6 @@
 const express = require('express');
 const { criarCategoria, listarCategorias, apagarCategoria, atualizarCategoria, obterCategoriaPorId, arquivar, desarquivar } = require('../controllers/categoriaController');
-const authMiddleware = require('../middlewares/authMiddleware');
+const authMiddleware = require('../middlewares/authMiddleware.js');
 const router = express.Router();
 
 

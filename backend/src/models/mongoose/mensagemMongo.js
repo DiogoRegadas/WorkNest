@@ -1,4 +1,3 @@
-// models/Mensagem.js
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -10,7 +9,7 @@ const MensagemSchema = new Schema({
   },
   autor: {
     type: Schema.Types.ObjectId,
-    ref: 'Utilizador', // ou 'User', dependendo do teu schema de utilizadores
+    ref: 'Utilizador',
     required: true
   },
   topico: {
@@ -39,10 +38,17 @@ const MensagemSchema = new Schema({
   lidaPor: [{
     type: Schema.Types.ObjectId,
     ref: 'Utilizador'
-  }]
+  }],
+  encriptada: {
+    type: Boolean,
+    default: false
+  },
+  meta: {
+    type: Object,
+    default: {}
+  }
 }, {
   timestamps: true
 });
 
 module.exports = mongoose.model('Mensagem', MensagemSchema, 't_mensagens');
-

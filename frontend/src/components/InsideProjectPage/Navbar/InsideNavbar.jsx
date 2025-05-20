@@ -5,7 +5,7 @@ import ColaboradoresModal from './ProjectCollaboratorsModal/ProjectCollaborators
 
 import { FaUserFriends, FaQuestionCircle } from 'react-icons/fa';
 
-export default function InsideNavbar({ onStartLogout, projeto }) {
+export default function InsideNavbar({ onStartLogout, projeto, onlineUsers }) {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showColabModal, setShowColabModal] = useState(false);
   const [hovering, setHovering] = useState(false);
@@ -63,6 +63,7 @@ export default function InsideNavbar({ onStartLogout, projeto }) {
         <ColaboradoresModal
           onClose={() => setShowColabModal(false)}
           projeto={projeto}
+          onlineUsers={onlineUsers}
         />
       )}
     </>

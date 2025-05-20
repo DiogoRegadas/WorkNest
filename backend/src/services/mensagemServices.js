@@ -1,23 +1,23 @@
-// backend/src/services/MensagemService.js
-
 const MensagemModel = require('../models/classes/mensagemModel');
 const Mensagem = require('../models/mongoose/mensagemSchema');
 
 const criarMensagem = async (dados) => {
   try {
-    const novaMensagem = new MensagemModel(dados.conteudo, dados.autor, dados.idTopico);
+    const novaMensagem = new MensagemModel(dados.conteudo, dados.autor, dados.topico);
 
     const mensagemMongo = new Mensagem({
       conteudo: novaMensagem.conteudo,
       autor: novaMensagem.autor,
-      idTopico: novaMensagem.idTopico
+      topico: novaMensagem.topico,
+      encriptada: dados.encriptada || false,
+      meta: dados.meta || {}
     });
 
     await mensagemMongo.save();
 
     return {
       status: 201,
-      resposta: { sucesso: true, mensagem: 'Mensagem criada com sucesso.', mensagemMongo }
+      resposta: { sucesso: true, mensagem: 'Mensagem criada com sucesso.', mensagem: mensagemMongo }
     };
   } catch (error) {
     console.error("❌ Erro no serviço ao criar mensagem:", error);
@@ -29,19 +29,53 @@ const criarMensagem = async (dados) => {
 };
 
 const listarMensagens = async () => {
-  const mensagens = await Mensagem.find().populate('autor', 'nome email').populate('idTopico', 'titulo');
-  return { sucesso: true, mensagens };
+  try {
+    const mensagens = await Mensagem.find()
+      .populate('autor', 'firstName lastName email')
+      .populate('topico', 'titulo');
+
+    return { sucesso: true, mensagens };
+  } catch (error) {
+    console.error("❌ Erro ao listar mensagens:", error);
+    return {
+      sucesso: false,
+      mensagem: 'Erro ao listar mensagens.'
+    };
+  }
+};
+
+const listarMensagensPorTopico = async (topicoId) => {
+  try {
+    const mensagens = await Mensagem.find({ topico: topicoId })
+      .sort({ dataEnvio: 1 }) // ou createdAt
+      .populate('autor', 'firstName lastName');
+
+    return {
+      status: 200,
+      resposta: { sucesso: true, mensagens }
+    };
+  } catch (error) {
+    console.error("❌ Erro ao listar mensagens por tópico:", error);
+    return {
+      status: 500,
+      resposta: { sucesso: false, mensagem: 'Erro ao listar mensagens por tópico.' }
+    };
+  }
 };
 
 const obterMensagemPorId = async (id) => {
   try {
-    const mensagem = await Mensagem.findById(id).populate('autor', 'nome email').populate('idTopico', 'titulo');
+    const mensagem = await Mensagem.findById(id)
+      .populate('autor', 'firstName lastName email')
+      .populate('topico', 'titulo');
+
     if (!mensagem) {
       return {
         status: 404,
         resposta: { sucesso: false, mensagem: 'Mensagem não encontrada.' }
       };
     }
+
     return {
       status: 200,
       resposta: { sucesso: true, mensagem }
@@ -57,13 +91,19 @@ const obterMensagemPorId = async (id) => {
 
 const atualizarMensagem = async (id, dados) => {
   try {
-    const mensagem = await Mensagem.findByIdAndUpdate(id, { conteudo: dados.conteudo }, { new: true });
+    const mensagem = await Mensagem.findByIdAndUpdate(id, {
+      conteudo: dados.conteudo,
+      editada: true,
+      dataEdicao: new Date()
+    }, { new: true });
+
     if (!mensagem) {
       return {
         status: 404,
         resposta: { sucesso: false, mensagem: 'Mensagem não encontrada.' }
       };
     }
+
     return {
       status: 200,
       resposta: { sucesso: true, mensagem: 'Mensagem atualizada com sucesso.', mensagem }
@@ -86,6 +126,7 @@ const apagarMensagem = async (id) => {
         resposta: { sucesso: false, mensagem: 'Mensagem não encontrada.' }
       };
     }
+
     return {
       status: 200,
       resposta: { sucesso: true, mensagem: 'Mensagem apagada com sucesso.' }
@@ -102,6 +143,7 @@ const apagarMensagem = async (id) => {
 module.exports = {
   criarMensagem,
   listarMensagens,
+  listarMensagensPorTopico,
   obterMensagemPorId,
   atualizarMensagem,
   apagarMensagem

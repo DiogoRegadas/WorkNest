@@ -7,6 +7,7 @@ const pedidoRoutes = require('./routes/pedidoRoutes');
 const topicoRoutes = require('./routes/topicRoutes');
 const categoriaRoutes = require('./routes/categoriaRoutes');
 const authRoutes = require('./routes/authRoutes');
+const mensagemRoutes = require('./routes/mensagemRoutes');
 require('dotenv').config();
 const connectDB = require('./config/db');
 const requestLogger  = require('./middlewares/requestLogger');
@@ -33,6 +34,7 @@ app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/topicos', topicoRoutes);
 app.use('/api/categorias', categoriaRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/mensagens', mensagemRoutes);
 
 // Rota padrão
 app.get('/', (req, res) => {

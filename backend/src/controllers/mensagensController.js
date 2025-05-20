@@ -22,6 +22,18 @@ exports.listarMensagens = async (req, res) => {
   }
 };
 
+exports.listarMensagensPorTopico = async (req, res) => {
+  try {
+    const { idTopico } = req.params;
+    const resultado = await MensagemService.listarMensagensPorTopico(idTopico);
+    return res.status(resultado.status).json(resultado.resposta);
+  } catch (error) {
+    console.error("❌ Erro ao listar mensagens por tópico:", error);
+    return res.status(500).json({ sucesso: false, mensagem: 'Erro ao listar mensagens por tópico.' });
+  }
+};
+
+
 exports.obterMensagemPorId = async (req, res) => {
   try {
     const resultado = await MensagemService.obterMensagemPorId(req.params.id);

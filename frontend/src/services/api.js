@@ -325,9 +325,40 @@ export const enviarPedidoProjeto = async ({ para, idProjeto }) => {
   }
 };
 
+export const removerColaborador = async (idProjeto, idUtilizador) => {
+  const token = localStorage.getItem('token');
 
+  try {
+    const resposta = await axios.delete(
+      `${API_URL}/projects/projetos/${idProjeto}/colaboradores/${idUtilizador}`,
+      {
+        headers: { Authorization: token }
+      }
+    );
+    return resposta.data;
+  } catch (erro) {
+    console.error("❌ Erro ao remover colaborador:", erro);
+    throw erro.response?.data || { mensagem: 'Erro ao remover colaborador.' };
+  }
+};
 
+export const transferirOwnerProjeto = async (idProjeto, novoOwnerId) => {
+  const token = localStorage.getItem('token');
 
+  try {
+    const resposta = await axios.post(
+      `${API_URL}/projects/projetos/${idProjeto}/transferir-owner`,
+      { novoOwnerId },
+      {
+        headers: { Authorization: token }
+      }
+    );
+    return resposta.data;
+  } catch (erro) {
+    console.error("❌ Erro ao transferir posse do projeto:", erro);
+    throw erro.response?.data || { mensagem: 'Erro ao transferir posse do projeto.' };
+  }
+};
 
 
 

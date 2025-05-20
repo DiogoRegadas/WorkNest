@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import styles from './ProjectCollaboratorsModal.module.css';
+import { useAlert } from '../../../../context/AlertContext';
 import { FaTimes, FaStar } from 'react-icons/fa';
-import { enviarPedidoProjeto, listarPedidosPendentes } from '../../../../services/api';
+import { enviarPedidoProjeto, listarPedidosPendentes, removerColaborador, transferirOwnerProjeto } from '../../../../services/api';
 
-export default function ColaboradoresModal({ projeto, userId, onClose, onlineUsers }) {
+export default function ColaboradoresModal({ projeto, onClose, onlineUsers }) {
+  const [userId, setUserId] = useState(null);
+  const [isOwner, setIsOwner] = useState(false);
   const [amigos, setAmigos] = useState([]);
   const [enviados, setEnviados] = useState([]);
+  const { showAlert, showConfirm } = useAlert();
 
-  const isOwner = projeto?.owner?._id === userId;
   const identificadorOwner = projeto?.owner?.identificador || projeto?.owner?._id?.slice(-4);
 
   const estaOnline = (id) => onlineUsers?.includes(id);
@@ -40,9 +43,90 @@ export default function ColaboradoresModal({ projeto, userId, onClose, onlineUse
     }
   };
 
+  const handleRemoverColaborador = (colabId) => {
+    showConfirm(
+      'Tens a certeza que queres remover este colaborador?',
+      async () => {
+        try {
+          const resposta = await removerColaborador(projeto._id, colabId);
+          showAlert(resposta.mensagem || 'Colaborador removido.', 'sucesso');
+          // WebSocket atualiza o projeto automaticamente
+        } catch (erro) {
+          showAlert(erro.mensagem || 'Erro ao remover colaborador.', 'erro');
+        }
+      },
+      () => {
+        showAlert('Remoção cancelada.', 'erro');
+      }
+    );
+  };
+  
+  
+  const handleTransferirPosse = (novoOwnerId) => {
+    showConfirm(
+      'Tens a certeza que queres transferir a posse do projeto?',
+      async () => {
+        try {
+          const resposta = await transferirOwnerProjeto(projeto._id, novoOwnerId);
+          showAlert(resposta.mensagem || 'Posse transferida.', 'sucesso');
+  
+          // Atualiza isOwner localmente (antes do socket emitir)
+          if (userId === novoOwnerId) {
+            setIsOwner(true);
+          } else {
+            setIsOwner(false);
+          }
+        } catch (erro) {
+          showAlert(erro.mensagem || 'Erro ao transferir posse.', 'erro');
+        }
+      },
+      () => {
+        showAlert('Transferência cancelada.', 'erro');
+      }
+    );
+  };
+  
+  
+
+  useEffect(() => {
+    const userDataRaw = localStorage.getItem('utilizador');
+    console.log('🔍 Dados do localStorage:', userDataRaw);
+    try {
+      const userData = JSON.parse(userDataRaw);
+      if (userData && userData._id) {
+        setUserId(userData.id);
+      }
+    } catch (e) {
+      console.error('❌ Erro ao fazer parse do utilizador:', e);
+    }
+  }, []);
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('utilizador'));
+    if (userData && userData.id) {
+      setUserId(userData.id);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (userId && projeto?.owner?._id) {
+      setIsOwner(userId === projeto.owner._id);
+    }
+  }, [userId, projeto?.owner?._id]);
+
   useEffect(() => {
     const amigosGuardados = JSON.parse(localStorage.getItem('amigos')) || [];
-    setAmigos(amigosGuardados);
+
+    const idsNoProjeto = [
+      projeto?.owner?._id,
+      ...(projeto?.listaUtilizadores?.map(u => u._id) || [])
+    ];
+
+    const amigosFiltrados = amigosGuardados.filter(
+      amigo => !idsNoProjeto.includes(amigo._id)
+    );
+
+    setAmigos(amigosFiltrados);
 
     const carregarPedidosProjeto = async () => {
       try {
@@ -58,7 +142,9 @@ export default function ColaboradoresModal({ projeto, userId, onClose, onlineUse
     };
 
     carregarPedidosProjeto();
-  }, [projeto._id]);
+  }, [projeto._id, projeto?.owner?._id, projeto?.listaUtilizadores]);
+
+  console.log('owner:', isOwner, 'userId:', userId);
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -77,9 +163,7 @@ export default function ColaboradoresModal({ projeto, userId, onClose, onlineUse
                 <div className={styles.ownerInfo}>
                   <p className={styles.name}>
                     {projeto?.owner?.firstName} {projeto?.owner?.lastName}
-                    <span className={styles.id}>
-                      &nbsp;&nbsp;#{identificadorOwner}
-                    </span>
+                    <span className={styles.id}>  #{identificadorOwner}</span>
                   </p>
                 </div>
               </div>
@@ -87,20 +171,29 @@ export default function ColaboradoresModal({ projeto, userId, onClose, onlineUse
 
             <div className={styles.collabSection}>
               <h3>🤝 Collaborators</h3>
-              {Array.isArray(projeto?.colaboradores) && projeto.colaboradores.length > 0 ? (
-                projeto.colaboradores.map((colab) => (
+              {Array.isArray(projeto?.listaUtilizadores) && projeto.listaUtilizadores.length > 0 ? (
+                projeto.listaUtilizadores.map((colab) => (
                   <div key={colab._id} className={styles.card}>
                     {renderAvatar(colab._id)}
                     <div>
                       <p className={styles.name}>
                         {colab.firstName} {colab.lastName}
+                        <span className={styles.id}>#{colab._id.slice(-4)}</span>
                       </p>
-                      <p className={styles.id}>#{colab.identificador}</p>
                     </div>
                     {isOwner && (
                       <div className={styles.actions}>
-                        <FaStar title="Transferir posse" className={styles.star} />
-                        <FaTimes title="Remover" className={styles.remove} />
+                        <FaStar
+                            title="Transferir posse"
+                            className={styles.star}
+                            onClick={() => handleTransferirPosse(colab._id)}
+                          />
+                          <FaTimes
+                            title="Remover"
+                            className={styles.remove}
+                            onClick={() => handleRemoverColaborador(colab._id)}
+                          />
+
                       </div>
                     )}
                   </div>

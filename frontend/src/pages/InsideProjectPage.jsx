@@ -8,10 +8,10 @@ import InsideNavbar from '../components/InsideProjectPage/Navbar/InsideNavbar';
 import InsideSidebar from '../components/InsideProjectPage/Sidebar/InsideSidebar';
 import LoadingScreen from '../components/InsideProjectPage/LoadingScreen/LoadingScreen';
 
-import { obterProjetoCompleto, criarCategoria } from '../services/api';
+import { obterProjetoCompleto } from '../services/api';
 
-import socket from '../sockets/socket'; // caminho corrigido
-import { configurarSocketEventos } from '../sockets/socketHandlers'; // caminho corrigido
+import socket from '../sockets/socket';
+import { configurarSocketEventos } from '../sockets/socketHandlers';
 
 export default function InsideProjectPage() {
   const { id } = useParams();
@@ -22,7 +22,7 @@ export default function InsideProjectPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [novaCategoriaNome, setNovaCategoriaNome] = useState('');
   const [isCriandoCategoria, setIsCriandoCategoria] = useState(false);
-
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
   useEffect(() => {
     const fetchProjeto = async () => {
@@ -31,8 +31,17 @@ export default function InsideProjectPage() {
         const projetoCompleto = resposta.projeto;
         setProjeto(projetoCompleto);
 
-        // Configura os eventos de WebSocket após o projeto estar carregado
-        configurarSocketEventos(socket, projetoCompleto._id, setProjeto);
+        // Obter userId do localStorage
+        const userData = JSON.parse(localStorage.getItem('utilizador'));
+        const userId = userData?._id || userData?.id;
+
+        if (!userId) {
+          console.warn('⚠️ Utilizador não encontrado no localStorage');
+          return;
+        }
+
+        // Configurar eventos do socket (inclui entrar na sala do projeto)
+        configurarSocketEventos(socket, projetoCompleto._id, setProjeto, setOnlineUsers);
       } catch (erro) {
         console.error("❌ Erro ao obter projeto:", erro);
       } finally {
@@ -42,10 +51,14 @@ export default function InsideProjectPage() {
 
     fetchProjeto();
 
-    // Limpa listeners ao sair da página
     return () => {
       socket.off('projetoAtualizado');
-      socket.emit('sairProjeto', id);
+      socket.off('projectOnlineUsers');
+
+      // Sair da sala ao fechar a página
+      const userData = JSON.parse(localStorage.getItem('utilizador'));
+      const userId = userData?._id || userData?.id;
+      socket.emit('sairProjeto', { projectId: id, userId });
     };
   }, [id]);
 
@@ -55,7 +68,7 @@ export default function InsideProjectPage() {
 
   return (
     <div className={styles.container}>
-      <InsideNavbar projetoNome={projeto.nome} projeto={projeto} />
+      <InsideNavbar projetoNome={projeto.nome} projeto={projeto} onlineUsers={onlineUsers}/>
       <div className={styles.body}>
         <InsideSidebar 
           projeto={projeto}

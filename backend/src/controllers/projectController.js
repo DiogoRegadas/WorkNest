@@ -72,3 +72,26 @@ exports.obterProjetoCompleto = async (req, res) => {
   
 };
 
+exports.removerColaborador = async (req, res) => {
+    try {
+      const { idProjeto, idUtilizador } = req.params;
+      const resultado = await ProjetoService.removerColaborador(idProjeto, idUtilizador);
+      return res.status(resultado.status).json(resultado.resposta);
+    } catch (error) {
+      console.error("❌ Erro ao remover colaborador:", error);
+      return res.status(500).json({ sucesso: false, mensagem: 'Erro ao remover colaborador.' });
+    }
+  };
+  
+  exports.transferirOwner = async (req, res) => {
+    try {
+      const { idProjeto } = req.params;
+      const { novoOwnerId } = req.body;
+      const resultado = await ProjetoService.transferirOwner(idProjeto, novoOwnerId);
+      return res.status(resultado.status).json(resultado.resposta);
+    } catch (error) {
+      console.error("❌ Erro ao transferir owner:", error);
+      return res.status(500).json({ sucesso: false, mensagem: 'Erro ao transferir posse.' });
+    }
+  };
+

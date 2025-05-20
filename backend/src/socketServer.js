@@ -11,25 +11,45 @@ function setupSocket(server) {
     }
   });
 
-  io.on('connection', (socket) => {
-    console.log('🟢 Utilizador conectado ao WebSocket');
+  const usersOnlinePorProjeto = {}; // { "projeto:abc123": Set(userId, userId...) }
 
-    // Entrar na sala de projeto
-    socket.on('entrarProjeto', (projectId) => {
-      socket.join(`projeto:${projectId}`);
-      console.log(`👤 Entrou na sala do projeto ${projectId}`);
+    io.on('connection', (socket) => {
+      console.log('🟢 Utilizador conectado ao WebSocket');
+
+      socket.on('entrarProjeto', ({ projectId, userId }) => {
+        const sala = `projeto:${projectId}`;
+        socket.join(sala);
+        socket.projectId = projectId;
+        socket.userId = userId;
+
+        if (!usersOnlinePorProjeto[sala]) {
+          usersOnlinePorProjeto[sala] = new Set();
+        }
+        usersOnlinePorProjeto[sala].add(userId);
+
+        console.log(`👤 ${userId} entrou na sala ${sala}`);
+        io.to(sala).emit('projectOnlineUsers', Array.from(usersOnlinePorProjeto[sala]));
+      });
+
+      socket.on('sairProjeto', ({ projectId, userId }) => {
+        const sala = `projeto:${projectId}`;
+        socket.leave(sala);
+        usersOnlinePorProjeto[sala]?.delete(userId);
+        console.log(`👤 ${userId} saiu da sala ${sala}`);
+        io.to(sala).emit('projectOnlineUsers', Array.from(usersOnlinePorProjeto[sala] || []));
+      });
+
+      socket.on('disconnect', () => {
+        const { projectId, userId } = socket;
+        const sala = `projeto:${projectId}`;
+        if (projectId && userId && usersOnlinePorProjeto[sala]) {
+          usersOnlinePorProjeto[sala].delete(userId);
+          console.log(`🔴 ${userId} desconectado da sala ${sala}`);
+          io.to(sala).emit('projectOnlineUsers', Array.from(usersOnlinePorProjeto[sala]));
+        }
+      });
     });
 
-    // Sair da sala (opcional)
-    socket.on('sairProjeto', (projectId) => {
-      socket.leave(`projeto:${projectId}`);
-      console.log(`👤 Saiu da sala do projeto ${projectId}`);
-    });
-
-    socket.on('disconnect', () => {
-      console.log('🔴 Utilizador desconectado');
-    });
-  });
 }
 
 function getIO() {
