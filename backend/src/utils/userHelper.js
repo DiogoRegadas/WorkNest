@@ -1,5 +1,5 @@
 const User = require('../models/mongoose/userMongo'); // Mongoose schema
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const createUser = async (userModel) => {
