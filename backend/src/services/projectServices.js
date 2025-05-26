@@ -1,5 +1,5 @@
 
-const ProjetoModel = require('../models/classes/ProjectModel');
+const ProjetoModel = require('../models/classes/projectModel');
 const Projeto = require('../models/mongoose/projectMongo');
 const CategoriaService = require('./categoriaServices');
 
