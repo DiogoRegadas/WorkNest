@@ -355,7 +355,10 @@ export default function InsideSidebar({
                   <div key={topico._id} className={styles.topicoItemWrapper}>
                     <div
                       className={`${styles.topicoItem} ${selectedTopico?._id === topico._id ? styles.activeTopico : ''}`}
-                      onClick={() => setSelectedTopico(topico)}
+                      onClick={() => {
+                        setSelectedTopico(topico);
+                        setSelectedCategoria(categoria);
+                      }}
                     >
                       {topicoEmEdicaoId === topico._id ? (
                         <input

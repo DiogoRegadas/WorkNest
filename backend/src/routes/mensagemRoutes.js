@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware.js');
-const MensagemController = require('../controllers/mensagemController');
+const MensagemController = require('../controllers/mensagensController');
 
 // Criar nova mensagem
 router.post('/', authMiddleware, MensagemController.criarMensagem);

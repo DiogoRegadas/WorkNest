@@ -1,0 +1,26 @@
+.dropdown {
+    position: absolute;
+    bottom: 58px;
+    left: 0;
+    right: 0;
+    background-color: #2e2e3d;
+    border-radius: 8px;
+    padding: 6px;
+    z-index: 20;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  
+  .item {
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: #ddd;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  
+  .item:hover,
+  .active {
+    background-color: #3e3e50;
+    color: white;
+  }
+  

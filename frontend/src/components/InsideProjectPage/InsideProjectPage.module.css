@@ -13,10 +13,11 @@
   .mainContent {
     flex-grow: 1;
     padding: 24px;
+    height: 100vh;
     position: relative;
     background-color: #121212;
     color: white;
-    overflow-y: auto;
+    overflow-y: none;
   }
   
   /* Chat placeholder */

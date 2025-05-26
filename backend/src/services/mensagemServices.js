@@ -1,23 +1,27 @@
 const MensagemModel = require('../models/classes/mensagemModel');
-const Mensagem = require('../models/mongoose/mensagemSchema');
+const Mensagem = require('../models/mongoose/mensagemMongo');
 
 const criarMensagem = async (dados) => {
   try {
-    const novaMensagem = new MensagemModel(dados.conteudo, dados.autor, dados.topico);
-
-    const mensagemMongo = new Mensagem({
-      conteudo: novaMensagem.conteudo,
-      autor: novaMensagem.autor,
-      topico: novaMensagem.topico,
+    const novaMensagem = new Mensagem({
+      conteudo: dados.conteudo,
+      autor: dados.autor,
+      topico: dados.topico,
       encriptada: dados.encriptada || false,
-      meta: dados.meta || {}
+      meta: dados.meta || {},
+      anexos: dados.anexos || [],
+      lidaPor: []
     });
 
-    await mensagemMongo.save();
+    await novaMensagem.save();
 
     return {
       status: 201,
-      resposta: { sucesso: true, mensagem: 'Mensagem criada com sucesso.', mensagem: mensagemMongo }
+      resposta: {
+        sucesso: true,
+        mensagem: 'Mensagem criada com sucesso.',
+        mensagem: novaMensagem
+      }
     };
   } catch (error) {
     console.error("❌ Erro no serviço ao criar mensagem:", error);

@@ -7,6 +7,7 @@ import styles from '../components/InsideProjectPage/InsideProjectPage.module.css
 import InsideNavbar from '../components/InsideProjectPage/Navbar/InsideNavbar';
 import InsideSidebar from '../components/InsideProjectPage/Sidebar/InsideSidebar';
 import LoadingScreen from '../components/InsideProjectPage/LoadingScreen/LoadingScreen';
+import ChatBox from '../components/InsideProjectPage/Chat/ChatBox';
 
 import { obterProjetoCompleto } from '../services/api';
 
@@ -66,6 +67,22 @@ export default function InsideProjectPage() {
     return <LoadingScreen nomeProjeto={projeto?.nome || '...'} />;
   }
 
+  // Calcula a categoria e a cor associada ao topico selecionado
+  const categoriaSelecionada = projeto?.categorias?.find(c =>
+    c.topicos?.some(t => t._id === selectedTopico?._id)
+  );
+
+  const indexCategoria = projeto?.categorias?.findIndex(c => c._id === categoriaSelecionada?._id);
+
+  // Mesma função usada na sidebar
+  const getColorForCategoria = (index) => {
+    const cores = ['#00ffd5', '#ff6b6b', '#feca57', '#5f27cd', '#1dd1a1'];
+    return cores[index % cores.length];
+  };
+
+  const corCategoria = indexCategoria >= 0 ? getColorForCategoria(indexCategoria) : '#ccc';
+
+
   return (
     <div className={styles.container}>
       <InsideNavbar projetoNome={projeto.nome} projeto={projeto} onlineUsers={onlineUsers}/>
@@ -83,13 +100,19 @@ export default function InsideProjectPage() {
           setSelectedTopico={setSelectedTopico}
         />
         <div className={styles.mainContent}>
-          <div className={styles.chatPlaceholder}>
-            <h2>Chat</h2>
-            <p>Aqui será exibido o chat da categoria/tópico selecionado.</p>
-          </div>
+        <ChatBox
+          topico={selectedTopico}
+          setSelectedTopico={setSelectedTopico}
+          categoriaAtual={categoriaSelecionada ? { ...categoriaSelecionada, cor: corCategoria } : null}
+          categorias={projeto.categorias}
+          utilizadores={projeto.listaUtilizadores}
+        />
+          {/* 
           <button className={styles.taskButton} onClick={() => setShowTaskModal(true)}>
             Ver Tarefas
           </button>
+
+          */}
           {showTaskModal && (
             <div className={styles.taskModal}>
               <div className={styles.modalContent}>

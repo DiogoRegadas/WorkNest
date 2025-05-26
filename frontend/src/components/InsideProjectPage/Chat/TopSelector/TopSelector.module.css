@@ -1,0 +1,74 @@
+.topBar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #333;
+  }
+  
+  .topicoListWrapper {
+    flex: 1;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding: 4px;
+  }
+  
+  .topicoList {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .topicoBadge {
+    display: inline-flex;
+    align-items: center;
+    background-color: #333;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    color: #ddd;
+    transition: background-color 0.2s;
+  }
+  
+  .topicoBadge:hover {
+    background-color: #444;
+  }
+  
+  .selected {
+    background-color: #5551ff;
+    color: white;
+  }
+  
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+
+  .arrowBtn {
+    background: transparent;
+    border: none;
+    color: #bbb;
+    font-size: 1.2rem;
+    padding: 6px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .arrowBtn:hover {
+    background-color: #3a3a4d;
+    color: white;
+  }
+  
+  .arrowBtn:focus {
+    outline: none;
+    background-color: #4b4b5d;
+    color: #fff;
+  }
+  

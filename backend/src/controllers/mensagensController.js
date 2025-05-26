@@ -1,6 +1,6 @@
 // backend/src/controllers/mensagemController.js
 
-const MensagemService = require('../services/MensagemService');
+const MensagemService = require('../services/mensagemServices');
 
 exports.criarMensagem = async (req, res) => {
   try {
