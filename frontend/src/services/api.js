@@ -2,7 +2,8 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'https://worknest-0i8a.onrender.com/api';
+
 
 export const registarUtilizador = async (dados) => {
   try {
