@@ -4,7 +4,7 @@ const authMiddleware = require('../middlewares/authMiddleware.js');
 const MensagemController = require('../controllers/mensagensController');
 
 // Criar nova mensagem
-router.post('/', authMiddleware, MensagemController.criarMensagem);
+router.post('/', MensagemController.criarMensagem);
 
 // Listar todas as mensagens (admin/debug)
 router.get('/', authMiddleware, MensagemController.listarMensagens);
