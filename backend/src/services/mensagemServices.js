@@ -25,6 +25,7 @@ const criarMensagem = async (dados) => {
     };
   } catch (error) {
     console.error("❌ Erro no serviço ao criar mensagem:", error);
+    console.log("❌ Erro no serviço ao criar mensagem::", error);
     return {
       status: 500,
       resposta: { sucesso: false, mensagem: 'Erro ao criar mensagem.' }
