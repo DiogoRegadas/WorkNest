@@ -16,6 +16,7 @@ const criarCategoria = async (dados) => {
             nome: novaCategoria.nome,
             descricao: novaCategoria.descricao,
             idProjeto: novaCategoria.idProjeto,
+            cor: dados.cor || '#ffffff',
             listaTopicos: []
         });
 

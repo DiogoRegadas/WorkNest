@@ -6,6 +6,7 @@ const CategoriaSchema = new Schema({
   descricao: { type: String },
   idProjeto: { type: mongoose.Schema.Types.ObjectId, ref: 'Projeto', required: true },
   isArchived: { type: Boolean, default: false },
+  cor: { type: String, default: '#ffffff' },
   listaTopicos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Topico' }]
 }, {
   timestamps: true
