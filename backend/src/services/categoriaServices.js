@@ -174,7 +174,7 @@ const obterCategoriaComTopicos = async (idCategoria) => {
           { path: 'listaMensagens', select: '_id' },
           { path: 'listaTarefas', select: '_id' }
         ],
-        select: 'titulo descricao isArchived listaMensagens listaTarefas'
+        select: 'titulo descricao isArchived cor listaMensagens listaTarefas'
       })
 
       //console.log("Categoria com tópicos:", categoria);
@@ -187,7 +187,8 @@ const obterCategoriaComTopicos = async (idCategoria) => {
         nome: categoria.nome,
         descricao: categoria.descricao,
         topicos: categoria.listaTopicos,
-        isArchived: categoria.isArchived
+        isArchived: categoria.isArchived,
+        cor: categoria.cor
       };
   
     } catch (error) {
