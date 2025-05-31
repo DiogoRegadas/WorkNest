@@ -1,7 +1,5 @@
-// backend/src/services/TarefaService.js
-
 const TarefaModel = require('../models/classes/tarefaModel');
-const Tarefa = require('../models/mongoose/tarefaSchema');
+const Tarefa = require('../models/mongoose/tarefaMongo');
 
 const criarTarefa = async (dados) => {
   try {
@@ -11,7 +9,8 @@ const criarTarefa = async (dados) => {
       dados.idTopico,
       dados.dataEntrega || null,
       dados.status || 'pendente',
-      dados.responsavel || null
+      dados.responsavel || null,
+      dados.anexos || []
     );
 
     const tarefaMongo = new Tarefa({
@@ -21,7 +20,7 @@ const criarTarefa = async (dados) => {
       dataEntrega: novaTarefa.dataEntrega,
       status: novaTarefa.status,
       responsavel: novaTarefa.responsavel,
-      anexos: []
+      anexos: novaTarefa.anexos
     });
 
     await tarefaMongo.save();
@@ -40,19 +39,37 @@ const criarTarefa = async (dados) => {
 };
 
 const listarTarefas = async () => {
-  const tarefas = await Tarefa.find().populate('responsavel', 'nome email').populate('idTopico', 'titulo');
-  return { sucesso: true, tarefas };
+  try {
+    const tarefas = await Tarefa.find()
+      .populate('responsavel', 'nome email')
+      .populate('idTopico', 'titulo');
+    
+    return {
+      status: 200,
+      resposta: { sucesso: true, tarefas }
+    };
+  } catch (error) {
+    console.error("❌ Erro ao listar tarefas:", error);
+    return {
+      status: 500,
+      resposta: { sucesso: false, mensagem: 'Erro ao listar tarefas.' }
+    };
+  }
 };
 
 const obterTarefaPorId = async (id) => {
   try {
-    const tarefa = await Tarefa.findById(id).populate('responsavel', 'nome email').populate('idTopico', 'titulo');
+    const tarefa = await Tarefa.findById(id)
+      .populate('responsavel', 'nome email')
+      .populate('idTopico', 'titulo');
+    
     if (!tarefa) {
       return {
         status: 404,
         resposta: { sucesso: false, mensagem: 'Tarefa não encontrada.' }
       };
     }
+
     return {
       status: 200,
       resposta: { sucesso: true, tarefa }
@@ -69,12 +86,14 @@ const obterTarefaPorId = async (id) => {
 const atualizarTarefa = async (id, dados) => {
   try {
     const tarefa = await Tarefa.findByIdAndUpdate(id, dados, { new: true });
+
     if (!tarefa) {
       return {
         status: 404,
         resposta: { sucesso: false, mensagem: 'Tarefa não encontrada.' }
       };
     }
+
     return {
       status: 200,
       resposta: { sucesso: true, mensagem: 'Tarefa atualizada com sucesso.', tarefa }
@@ -91,12 +110,14 @@ const atualizarTarefa = async (id, dados) => {
 const apagarTarefa = async (id) => {
   try {
     const tarefa = await Tarefa.findByIdAndDelete(id);
+
     if (!tarefa) {
       return {
         status: 404,
         resposta: { sucesso: false, mensagem: 'Tarefa não encontrada.' }
       };
     }
+
     return {
       status: 200,
       resposta: { sucesso: true, mensagem: 'Tarefa apagada com sucesso.' }

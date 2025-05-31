@@ -1,6 +1,4 @@
-// backend/src/controllers/tarefaController.js
-
-const TarefaService = require('../services/TarefaService');
+const TarefaService = require('../services/tarefaServices');
 
 exports.criarTarefa = async (req, res) => {
   try {
@@ -15,7 +13,7 @@ exports.criarTarefa = async (req, res) => {
 exports.listarTarefas = async (req, res) => {
   try {
     const resultado = await TarefaService.listarTarefas();
-    return res.status(200).json(resultado);
+    return res.status(resultado.status).json(resultado.resposta);
   } catch (error) {
     console.error("❌ Erro ao listar tarefas:", error);
     return res.status(500).json({ sucesso: false, mensagem: 'Erro ao listar tarefas.' });

@@ -1,16 +1,20 @@
-// backend/src/models/mongoose/tarefaSchema.js
-
 const mongoose = require('mongoose');
+const AnexoSchema = require('./AnexoSchema.js');
 const { Schema } = mongoose;
 
+
 const TarefaSchema = new Schema({
-  titulo: { type: String, required: true },
-  descricao: { type: String },
+  titulo: { type: String, required: true, trim: true },
+  descricao: { type: String, trim: true },
   idTopico: { type: mongoose.Schema.Types.ObjectId, ref: 'Topico', required: true },
   dataEntrega: { type: Date, default: null },
-  status: { type: String, default: 'pendente' },
+  status: {
+    type: String,
+    enum: ['pendente', 'em progresso', 'concluída'],
+    default: 'pendente'
+  },
   responsavel: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
-  anexos: [{ type: String }] // caminhos dos ficheiros
+  anexos: [AnexoSchema]
 }, {
   timestamps: true
 });

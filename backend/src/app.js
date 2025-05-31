@@ -8,8 +8,10 @@ const topicoRoutes = require('./routes/topicRoutes');
 const categoriaRoutes = require('./routes/categoriaRoutes');
 const authRoutes = require('./routes/authRoutes');
 const mensagemRoutes = require('./routes/mensagemRoutes');
+const tarefaRoutes = require('./routes/tarefaRoutes'); // Importa as rotas de tarefas
+const anexoRoutes = require('./routes/anexoRoutes'); // Importa as rotas de anexos
 require('dotenv').config();
-const connectDB = require('./config/db');
+const { connectDB } = require('./config/db');
 const requestLogger  = require('./middlewares/requestLogger');
 
 // Conectar à base de dados
@@ -35,6 +37,8 @@ app.use('/api/topicos', topicoRoutes);
 app.use('/api/categorias', categoriaRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/mensagens', mensagemRoutes);
+app.use('/api/tarefas', tarefaRoutes); // Rota para tarefas
+app.use('/api/anexos', anexoRoutes); // Rota para anexos
 
 // Rota padrão
 app.get('/', (req, res) => {
