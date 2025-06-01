@@ -1,5 +1,7 @@
 const TarefaModel = require('../models/classes/tarefaModel');
 const Tarefa = require('../models/mongoose/tarefaMongo');
+const Topico = require('../models/mongoose/topicMongo');
+const ProjetoService = require('./projectServices');
 
 const criarTarefa = async (dados) => {
   try {
@@ -24,6 +26,20 @@ const criarTarefa = async (dados) => {
     });
 
     await tarefaMongo.save();
+
+    await Topico.findByIdAndUpdate(dados.idTopico, {
+                $push: { listarTarefas: tarefaMongo._id }
+    });
+    
+            // 🔁 Emitir projeto completo atualizado
+            const io = getIO();
+            const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(dados.idProjeto);
+    
+            if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
+                io.to(`projeto:${dados.idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
+                console.log(`📢 Projeto completo emitido via WebSocket para sala projeto:${dados.idProjeto}`);
+            }
+  
 
     return {
       status: 201,

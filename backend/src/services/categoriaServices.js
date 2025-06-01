@@ -168,14 +168,20 @@ const atualizarCategoria = async (id, dados) => {
 const obterCategoriaComTopicos = async (idCategoria) => {
     try {
       const categoria = await Categoria.findById(idCategoria)
-      .populate({
-        path: 'listaTopicos',
-        populate: [
-          { path: 'listaMensagens', select: '_id' },
-          { path: 'listaTarefas', select: '_id' }
-        ],
-        select: 'titulo descricao isArchived cor listaMensagens listaTarefas'
-      })
+  .populate({
+    path: 'listaTopicos',
+    populate: [
+      {
+        path: 'listaMensagens',
+        select: 'conteudo autor criadoEm' // ou os campos que quiseres
+      },
+      {
+        path: 'listaTarefas',
+        select: 'titulo descricao status dataEntrega responsavel' // ou tudo
+      }
+    ],
+    select: 'titulo descricao isArchived cor listaMensagens listaTarefas'
+  });
 
       //console.log("Categoria com tópicos:", categoria);
     
