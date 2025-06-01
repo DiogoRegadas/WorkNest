@@ -29,7 +29,7 @@ const criarTarefa = async (dados) => {
     await tarefaMongo.save();
 
     await Topico.findByIdAndUpdate(dados.idTopico, {
-                $push: { listarTarefas: tarefaMongo._id }
+                $push: { listaTarefas: tarefaMongo._id }
     });
     
             // 🔁 Emitir projeto completo atualizado
