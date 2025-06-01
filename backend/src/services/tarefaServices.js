@@ -31,7 +31,8 @@ const criarTarefa = async (dados) => {
     await Topico.findByIdAndUpdate(dados.idTopico, {
                 $push: { listaTarefas: tarefaMongo._id }
     });
-    
+
+    console.log('ID do PROJETO:', dados.idProjeto); 
             // 🔁 Emitir projeto completo atualizado
             const io = getIO();
             const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(dados.idProjeto);
