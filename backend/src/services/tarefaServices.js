@@ -2,6 +2,7 @@ const TarefaModel = require('../models/classes/tarefaModel');
 const Tarefa = require('../models/mongoose/tarefaMongo');
 const Topico = require('../models/mongoose/topicMongo');
 const ProjetoService = require('./projectServices');
+const { getIO } = require('../socketServer');
 
 const criarTarefa = async (dados) => {
   try {
