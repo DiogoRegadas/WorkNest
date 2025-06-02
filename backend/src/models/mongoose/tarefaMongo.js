@@ -15,7 +15,12 @@ const TarefaSchema = new Schema({
   },
   responsavel: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
   respostaDescricao: { type: String, trim: true },
-  anexos: [AnexoSchema]
+  anexos: [{
+  nomeOriginal: String,
+  ficheiroId: mongoose.Schema.Types.ObjectId,
+  mimeType: String,
+  tamanho: Number
+}]
 }, {
   timestamps: true
 });
