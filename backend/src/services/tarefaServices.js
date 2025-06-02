@@ -116,9 +116,7 @@ const atualizarTarefa = async (id, dados) => {
       if (status !== undefined) update.$set.status = status;
     }
 
-    if (anexos.length > 0) {
-      update.$push = { anexos: { $each: anexos } };
-    }
+    
 
     const tarefa = await Tarefa.findByIdAndUpdate(id, update, { new: true });
 
