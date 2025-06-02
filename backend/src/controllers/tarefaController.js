@@ -70,6 +70,7 @@ exports.uploadAnexos = async (req, res) => {
 
     for (let i = 0; i < req.files.length; i++) {
       const file = req.files[i];
+
       const iv = Array.isArray(ivs) ? ivs[i] : ivs;
       const nome = Array.isArray(nomes) ? nomes[i] : file.originalname;
       const tipo = Array.isArray(tipos) ? tipos[i] : file.mimetype;
@@ -80,13 +81,15 @@ exports.uploadAnexos = async (req, res) => {
         metadata: { iv }
       });
 
+      const ficheiroId = uploadStream.id; // <- ID manual
+
       uploadStream.end(file.buffer);
 
       await new Promise((resolve, reject) => {
-        uploadStream.on('finish', (uploadedFile) => {
+        uploadStream.on('finish', () => {
           anexos.push({
             nomeOriginal: nome,
-            ficheiroId: uploadedFile._id,
+            ficheiroId: ficheiroId,
             mimeType: tipo,
             tamanho: tamanho
           });
