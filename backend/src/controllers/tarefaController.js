@@ -57,6 +57,7 @@ exports.apagarTarefa = async (req, res) => {
 exports.uploadAnexos = async (req, res) => {
   try {
     const { id } = req.params;
+    const { ivs = [], nomes = [], tipos = [], tamanhos = [] } = req.body;
 
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ sucesso: false, mensagem: 'Nenhum ficheiro enviado.' });
@@ -65,12 +66,16 @@ exports.uploadAnexos = async (req, res) => {
     const bucket = getBucket();
     const anexos = [];
 
-    for (const file of req.files) {
-      const uploadStream = bucket.openUploadStream(file.originalname, {
-        contentType: file.mimetype,
-        metadata: {
-          iv: req.body.iv || null // opcional, se enviado fora de cada ficheiro
-        }
+    for (let i = 0; i < req.files.length; i++) {
+      const file = req.files[i];
+      const iv = Array.isArray(ivs) ? ivs[i] : ivs;
+      const nome = Array.isArray(nomes) ? nomes[i] : file.originalname;
+      const tipo = Array.isArray(tipos) ? tipos[i] : file.mimetype;
+      const tamanho = Array.isArray(tamanhos) ? tamanhos[i] : file.size;
+
+      const uploadStream = bucket.openUploadStream(nome, {
+        contentType: tipo,
+        metadata: { iv }
       });
 
       uploadStream.end(file.buffer);
@@ -78,10 +83,10 @@ exports.uploadAnexos = async (req, res) => {
       await new Promise((resolve, reject) => {
         uploadStream.on('finish', (uploadedFile) => {
           anexos.push({
-            nomeOriginal: file.originalname,
+            nomeOriginal: nome,
             ficheiroId: uploadedFile._id,
-            mimeType: file.mimetype,
-            tamanho: file.size
+            mimeType: tipo,
+            tamanho: tamanho
           });
           resolve();
         });
