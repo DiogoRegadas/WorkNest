@@ -103,7 +103,9 @@ const obterTarefaPorId = async (id) => {
 
 const atualizarTarefa = async (id, dados) => {
   try {
-    const { respostaDescricao, status, anexos = [] } = dados;
+    const { respostaDescricao, status} = dados;
+
+    console.log("🔄 Atualizando tarefa com dados:", respostaDescricao, status);
 
     // Separar campos para $set e $push
     const update = {};
