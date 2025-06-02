@@ -24,7 +24,7 @@ router.delete('/tarefa/:id', authMiddleware, apagarTarefa);
 router.post(
   '/:id/anexos',
   authMiddleware,
-  upload.array('files'), // 'files' deve coincidir com o nome no FormData
+  upload.array('ficheiros'), // 'files' deve coincidir com o nome no FormData
   uploadAnexos
 );
 

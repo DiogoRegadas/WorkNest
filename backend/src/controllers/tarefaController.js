@@ -1,4 +1,6 @@
 const TarefaService = require('../services/tarefaServices');
+const Tarefa = require('../models/mongoose/tarefaMongo');
+
 
 exports.criarTarefa = async (req, res) => {
   try {
@@ -59,8 +61,30 @@ exports.uploadAnexos = async (req, res) => {
       return res.status(400).json({ sucesso: false, mensagem: 'Nenhum ficheiro enviado.' });
     }
 
-    const resultado = await TarefaService.uploadFicheirosParaTarefa(id, req.files);
-    return res.status(resultado.status).json(resultado.resposta);
+    // Transforma os ficheiros recebidos para o formato a guardar no Mongo
+    const anexos = req.files.map((file) => ({
+      nomeOriginal: file.originalname,
+      ficheiroId: file.id || file._id, // dependendo do multer
+      mimeType: file.mimetype,
+      tamanho: file.size
+    }));
+
+    // Atualiza a tarefa no MongoDB
+    const tarefaAtualizada = await Tarefa.findByIdAndUpdate(
+      id,
+      { $push: { anexos: { $each: anexos } } },
+      { new: true }
+    );
+
+    if (!tarefaAtualizada) {
+      return res.status(404).json({ sucesso: false, mensagem: 'Tarefa não encontrada.' });
+    }
+
+    return res.status(200).json({
+      sucesso: true,
+      mensagem: 'Ficheiros anexados com sucesso.',
+      tarefa: tarefaAtualizada
+    });
   } catch (error) {
     console.error("❌ Erro ao enviar anexos:", error);
     return res.status(500).json({ sucesso: false, mensagem: 'Erro ao enviar anexos.' });
