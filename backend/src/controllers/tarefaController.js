@@ -34,6 +34,7 @@ exports.obterTarefaPorId = async (req, res) => {
 
 exports.atualizarTarefa = async (req, res) => {
   try {
+    
     const resultado = await TarefaService.atualizarTarefa(req.params.id, req.body);
     return res.status(resultado.status).json(resultado.resposta);
   } catch (error) {
