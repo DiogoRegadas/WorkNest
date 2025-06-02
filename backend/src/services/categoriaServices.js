@@ -177,7 +177,7 @@ const obterCategoriaComTopicos = async (idCategoria) => {
       },
       {
         path: 'listaTarefas',
-        select: 'titulo descricao status dataEntrega responsavel' // ou tudo
+        select: 'titulo descricao status dataEntrega responsavel respostaDescricao anexos' // ou tudo
       }
     ],
     select: 'titulo descricao isArchived cor listaMensagens listaTarefas'
