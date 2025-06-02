@@ -1,5 +1,7 @@
 const TarefaService = require('../services/tarefaServices');
 const Tarefa = require('../models/mongoose/tarefaMongo');
+const { getBucket } = require('../config/db'); // ex: '../db' ou '../config/database'
+
 
 
 exports.criarTarefa = async (req, res) => {

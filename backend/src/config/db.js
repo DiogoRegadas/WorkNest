@@ -28,6 +28,13 @@ const connectDB = async () => {
   }
 };
 
+const getBucket = () => {
+  if (!gfsBucket) {
+    throw new Error("GridFSBucket ainda não foi inicializado.");
+  }
+  return gfsBucket;
+};
+
 module.exports = {
   connectDB,
   gfsBucket: () => gfsBucket
