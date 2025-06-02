@@ -37,5 +37,5 @@ const getBucket = () => {
 
 module.exports = {
   connectDB,
-  gfsBucket: () => gfsBucket
+  gfsBucket
 };
