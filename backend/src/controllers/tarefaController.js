@@ -49,3 +49,20 @@ exports.apagarTarefa = async (req, res) => {
     return res.status(500).json({ sucesso: false, mensagem: 'Erro ao apagar tarefa.' });
   }
 };
+
+// ✅ Novo controlador para upload de anexos
+exports.uploadAnexos = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ sucesso: false, mensagem: 'Nenhum ficheiro enviado.' });
+    }
+
+    const resultado = await TarefaService.uploadFicheirosParaTarefa(id, req.files);
+    return res.status(resultado.status).json(resultado.resposta);
+  } catch (error) {
+    console.error("❌ Erro ao enviar anexos:", error);
+    return res.status(500).json({ sucesso: false, mensagem: 'Erro ao enviar anexos.' });
+  }
+};
