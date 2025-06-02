@@ -127,6 +127,7 @@ const atualizarTarefa = async (id, dados) => {
       };
     }
 
+    console.log("📨 ID do projeto recebido:", dados.idProjeto);
 
     const io = getIO();
             const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(dados.idProjeto);
