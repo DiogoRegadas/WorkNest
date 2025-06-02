@@ -14,6 +14,7 @@ const TarefaSchema = new Schema({
     default: 'pendente'
   },
   responsavel: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+  respostaDescricao: { type: String, trim: true },
   anexos: [AnexoSchema]
 }, {
   timestamps: true
