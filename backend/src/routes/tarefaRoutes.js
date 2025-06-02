@@ -17,12 +17,12 @@ const router = express.Router();
 router.post('/criartarefa', authMiddleware, criarTarefa);
 router.get('/tarefas', authMiddleware, listarTarefas);
 router.get('/tarefa/:id', authMiddleware, obterTarefaPorId);
-router.put('/tarefa/:id', authMiddleware, atualizarTarefa);
+router.put('/:id', authMiddleware, atualizarTarefa);
 router.delete('/tarefa/:id', authMiddleware, apagarTarefa);
 
 // ✅ Nova rota para upload de anexos encriptados
 router.post(
-  '/tarefas/:id/anexos',
+  '/:id/anexos',
   authMiddleware,
   upload.array('files'), // 'files' deve coincidir com o nome no FormData
   uploadAnexos
