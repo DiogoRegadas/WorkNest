@@ -2,7 +2,7 @@ const TarefaService = require('../services/tarefaServices');
 const Tarefa = require('../models/mongoose/tarefaMongo');
 const { getBucket } = require('../config/db'); // ex: '../db' ou '../config/database'
 
-
+console.log("🧪 getBucket é:", typeof getBucket); // deve dar "function"
 
 exports.criarTarefa = async (req, res) => {
   try {
