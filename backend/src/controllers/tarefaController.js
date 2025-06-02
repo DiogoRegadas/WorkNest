@@ -62,15 +62,33 @@ exports.uploadAnexos = async (req, res) => {
       return res.status(400).json({ sucesso: false, mensagem: 'Nenhum ficheiro enviado.' });
     }
 
-    // Transforma os ficheiros recebidos para o formato a guardar no Mongo
-    const anexos = req.files.map((file) => ({
-      nomeOriginal: file.originalname,
-      ficheiroId: file.id || file._id, // dependendo do multer
-      mimeType: file.mimetype,
-      tamanho: file.size
-    }));
+    const bucket = getBucket();
+    const anexos = [];
 
-    // Atualiza a tarefa no MongoDB
+    for (const file of req.files) {
+      const uploadStream = bucket.openUploadStream(file.originalname, {
+        contentType: file.mimetype,
+        metadata: {
+          iv: req.body.iv || null // opcional, se enviado fora de cada ficheiro
+        }
+      });
+
+      uploadStream.end(file.buffer);
+
+      await new Promise((resolve, reject) => {
+        uploadStream.on('finish', (uploadedFile) => {
+          anexos.push({
+            nomeOriginal: file.originalname,
+            ficheiroId: uploadedFile._id,
+            mimeType: file.mimetype,
+            tamanho: file.size
+          });
+          resolve();
+        });
+        uploadStream.on('error', reject);
+      });
+    }
+
     const tarefaAtualizada = await Tarefa.findByIdAndUpdate(
       id,
       { $push: { anexos: { $each: anexos } } },
