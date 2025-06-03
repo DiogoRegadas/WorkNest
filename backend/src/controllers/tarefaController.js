@@ -69,37 +69,40 @@ exports.uploadAnexos = async (req, res) => {
     const anexos = [];
 
     for (let i = 0; i < req.files.length; i++) {
-  const file = req.files[i];
+      const file = req.files[i];
 
-  const iv = Array.isArray(ivs) ? ivs[i] : ivs;
-  const nome = Array.isArray(nomes) ? nomes[i] : file.originalname;
-  const tipo = Array.isArray(tipos) ? tipos[i] : file.mimetype;
-  const tamanho = Array.isArray(tamanhos) ? tamanhos[i] : file.size;
+      const iv = Array.isArray(ivs) ? ivs[i] : ivs;
+      const nome = Array.isArray(nomes) ? nomes[i] : file.originalname;
+      const tipo = Array.isArray(tipos) ? tipos[i] : file.mimetype;
+      const tamanho = Array.isArray(tamanhos) ? tamanhos[i] : file.size;
 
-  const uploadStream = bucket.openUploadStream(nome, {
-    contentType: tipo,
-    metadata: { iv }
-  });
+      await new Promise((resolve, reject) => {
+        const uploadStream = bucket.openUploadStream(nome, {
+          contentType: tipo,
+          metadata: { iv }
+        });
 
-  const ficheiroId = uploadStream.id; 
+        const ficheiroId = uploadStream.id;
 
-  uploadStream.end(file.buffer);
+        uploadStream.on('finish', () => {
+          console.log("✅ Upload terminado. ID:", ficheiroId);
+          anexos.push({
+            nomeOriginal: nome,
+            ficheiroId: ficheiroId,
+            mimeType: tipo,
+            tamanho: tamanho
+          });
+          resolve();
+        });
 
-  await new Promise((resolve, reject) => {
-  uploadStream.on('finish', () => {
-    console.log("✅ Upload terminado. ID:", ficheiroId);
-    anexos.push({
-      nomeOriginal: nome,
-      ficheiroId: ficheiroId, // <- usa o ID capturado
-      mimeType: tipo,
-      tamanho: tamanho
-    });
-    resolve();
-  });
-  uploadStream.on('error', reject);
-});
-}
+        uploadStream.on('error', (err) => {
+          console.error("❌ Erro ao fazer upload:", err);
+          reject(err);
+        });
 
+        uploadStream.end(file.buffer);
+      });
+    }
 
     const tarefaAtualizada = await Tarefa.findByIdAndUpdate(
       id,
@@ -116,11 +119,13 @@ exports.uploadAnexos = async (req, res) => {
       mensagem: 'Ficheiros anexados com sucesso.',
       tarefa: tarefaAtualizada
     });
+
   } catch (error) {
     console.error("❌ Erro ao enviar anexos:", error);
     return res.status(500).json({ sucesso: false, mensagem: 'Erro ao enviar anexos.' });
   }
 };
+
 
 
 exports.downloadAnexo = async (req, res) => {
