@@ -148,7 +148,8 @@ exports.downloadAnexo = async (req, res) => {
 
     res.setHeader('Content-Type', fileDoc.contentType);
     console.log("IV do ficheiro:", iv); // <-- Log do IV
-    res.setHeader('X-IV', iv || ''); // <-- IV vai como header
+    res.setHeader('X-IV', iv || '');
+    res.setHeader('Access-Control-Expose-Headers', 'X-IV'); // <-- IV vai como header
 
     downloadStream.pipe(res);
   } catch (erro) {
