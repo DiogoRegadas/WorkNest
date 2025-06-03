@@ -86,6 +86,7 @@ exports.uploadAnexos = async (req, res) => {
   await new Promise((resolve, reject) => {
     uploadStream.on('finish', (fileInfo) => {
       // Este _id é o ID real usado pelo Mongo
+      console.log("✅ Ficheiro enviado com sucesso:", fileInfo);
       anexos.push({
         nomeOriginal: nome,
         ficheiroId: fileInfo._id, // <--- aqui sim!
