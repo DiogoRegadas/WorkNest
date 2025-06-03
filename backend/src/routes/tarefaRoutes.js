@@ -5,7 +5,8 @@ const {
   obterTarefaPorId,
   atualizarTarefa,
   apagarTarefa,
-  uploadAnexos, // 👈 novo controlador
+  uploadAnexos,
+  downloadAnexo, // 👈 novo controlador
 } = require('../controllers/tarefaController');
 
 const authMiddleware = require('../middlewares/authMiddleware');
@@ -28,6 +29,6 @@ router.post(
   uploadAnexos
 );
 
-router.get('/anexos/:ficheiroId', authMiddleware, tarefaController.downloadAnexo);
+router.get('/anexos/:ficheiroId', authMiddleware, downloadAnexo);
 
 module.exports = router;
