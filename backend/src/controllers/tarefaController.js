@@ -147,6 +147,7 @@ exports.downloadAnexo = async (req, res) => {
     const downloadStream = bucket.openDownloadStream(fileDoc._id);
 
     res.setHeader('Content-Type', fileDoc.contentType);
+    console.log("IV do ficheiro:", iv); // <-- Log do IV
     res.setHeader('X-IV', iv || ''); // <-- IV vai como header
 
     downloadStream.pipe(res);
