@@ -81,23 +81,23 @@ exports.uploadAnexos = async (req, res) => {
     metadata: { iv }
   });
 
+  const ficheiroId = uploadStream.id; 
+
   uploadStream.end(file.buffer);
 
   await new Promise((resolve, reject) => {
-    uploadStream.on('finish', (fileInfo) => {
-      // Este _id é o ID real usado pelo Mongo
-      console.log("✅ Ficheiro enviado com sucesso:", fileInfo);
-      anexos.push({
-        nomeOriginal: nome,
-        ficheiroId: fileInfo._id, // <--- aqui sim!
-        mimeType: tipo,
-        tamanho: tamanho
-      });
-      resolve();
+  uploadStream.on('finish', () => {
+    console.log("✅ Upload terminado. ID:", ficheiroId);
+    anexos.push({
+      nomeOriginal: nome,
+      ficheiroId: ficheiroId, // <- usa o ID capturado
+      mimeType: tipo,
+      tamanho: tamanho
     });
-
-    uploadStream.on('error', reject);
+    resolve();
   });
+  uploadStream.on('error', reject);
+});
 }
 
 
