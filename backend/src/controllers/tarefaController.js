@@ -135,25 +135,23 @@ exports.downloadAnexo = async (req, res) => {
     const { ficheiroId } = req.params;
 
     const bucket = getBucket();
-    const objectId = new mongoose.Types.ObjectId(ficheiroId);
+    const filesCollection = bucket.s.db.collection(`${bucket.s.options.bucketName}.files`);
+    const fileDoc = await filesCollection.findOne({ _id: new mongoose.Types.ObjectId(ficheiroId) });
 
-    const downloadStream = bucket.openDownloadStream(objectId);
-
-    downloadStream.on('file', (file) => {
-      res.set({
-        'Content-Type': file.contentType,
-        'Content-Disposition': `attachment; filename="${file.filename}"`,
-      });
-    });
-
-    downloadStream.on('error', (err) => {
-      console.error("❌ Erro ao fazer download:", err);
+    if (!fileDoc) {
       return res.status(404).json({ sucesso: false, mensagem: 'Ficheiro não encontrado.' });
-    });
+    }
+
+    const iv = fileDoc.metadata?.iv;
+
+    const downloadStream = bucket.openDownloadStream(fileDoc._id);
+
+    res.setHeader('Content-Type', fileDoc.contentType);
+    res.setHeader('X-IV', iv || ''); // <-- IV vai como header
 
     downloadStream.pipe(res);
-  } catch (error) {
-    console.error("❌ Erro geral no download:", error);
-    return res.status(500).json({ sucesso: false, mensagem: 'Erro ao fazer download do anexo.' });
+  } catch (erro) {
+    console.error("❌ Erro no download do ficheiro:", erro);
+    return res.status(500).json({ sucesso: false, mensagem: 'Erro no download do ficheiro.' });
   }
 };
