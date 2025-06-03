@@ -28,4 +28,6 @@ router.post(
   uploadAnexos
 );
 
+router.get('/anexos/:ficheiroId', authMiddleware, tarefaController.downloadAnexo);
+
 module.exports = router;
