@@ -27,8 +27,22 @@ async function obterEstatisticas() {
     estatisticas[item._id] = item.total;
   }
 
-  return { status: 200, resposta: estatisticas };
+  // Buscar comentários (mensagens não vazias)
+  const mensagens = await Avaliacao.find({
+    mensagem: { $exists: true, $ne: "" }
+  }).select("mensagem -_id"); // Só queremos o campo "mensagem"
+
+  const mensagensExtraidas = mensagens.map(m => m.mensagem);
+
+  return {
+    status: 200,
+    resposta: {
+      ...estatisticas,
+      mensagens: mensagensExtraidas
+    }
+  };
 }
+
 
 module.exports = {
   criarAvaliacao,
