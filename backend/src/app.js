@@ -10,6 +10,7 @@ const authRoutes = require('./routes/authRoutes');
 const mensagemRoutes = require('./routes/mensagemRoutes');
 const tarefaRoutes = require('./routes/tarefaRoutes'); // Importa as rotas de tarefas
 const anexoRoutes = require('./routes/anexoRoutes'); // Importa as rotas de anexos
+const avaliacaoRoutes = require('./routes/avaliacaoRoutes'); // Importa as rotas de avaliações
 require('dotenv').config();
 const { connectDB } = require('./config/db');
 const requestLogger  = require('./middlewares/requestLogger');
@@ -39,7 +40,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/mensagens', mensagemRoutes);
 app.use('/api/tarefas', tarefaRoutes); // Rota para tarefas
 app.use('/api/anexos', anexoRoutes); // Rota para anexos
-
+app.use('/api/avaliacoes', avaliacaoRoutes); // Rota para avaliações
 // Rota padrão
 app.get('/', (req, res) => {
     res.send('WorkNest API está a funcionar!');

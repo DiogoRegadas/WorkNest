@@ -9,7 +9,7 @@ const {
   downloadAnexo, // 👈 novo controlador
 } = require('../controllers/tarefaController');
 
-const authMiddleware = require('../middlewares/authMiddleware');
+const {authMiddleware} = require('../middlewares/authMiddleware');
 const upload = require('../middlewares/uploadMiddleware'); // 👈 middleware para GridFS
 
 const router = express.Router();

@@ -25,4 +25,16 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+const verificarAdmin = (req, res, next) => {
+  if (req.user && req.user.nivelAcesso > 1) {
+    next();
+  } else {
+    console.warn('🔒 Acesso negado: utilizador sem permissões de administrador.');
+    return res.status(403).json({ mensagem: 'Acesso negado: apenas administradores podem aceder.' });
+  }
+};
+
+module.exports = {
+  authMiddleware,
+  verificarAdmin,
+};

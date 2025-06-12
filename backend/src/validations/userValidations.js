@@ -1,6 +1,7 @@
 const Joi = require('joi');
 
 
+
 const registerUserSchema = Joi.object({
   firstName: Joi.string().min(2).required().messages({
     'string.empty': 'O primeiro nome é obrigatório.',
@@ -24,8 +25,12 @@ const registerUserSchema = Joi.object({
 
   password: Joi.string().required().messages({
     'string.empty': 'A palavra-passe é obrigatória.'
-  })
+  }),
+
+  // ✅ Campo opcional, apenas aceitamos valores 1 (user) ou 2 (admin)
+  nivelAcesso: Joi.number().valid(1, 2).optional()
 });
+
 
 
 const loginUserSchema = Joi.object({

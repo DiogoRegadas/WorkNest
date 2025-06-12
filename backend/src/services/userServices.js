@@ -17,12 +17,14 @@ const registerUser = async (dados) => {
     }
     
     console.log("Dados recebidos para registo:", dados);
-    const { firstName, lastName, localidade, email, password } = dados;
+    const { firstName, lastName, localidade, email, password, nivelAcesso } = dados;
   
     // Criação do utilizador com os novos campos
-    const newUser = new UserRegisterModel(firstName, lastName, localidade, email, password);
+    const newUser = new UserRegisterModel(firstName, lastName, localidade, email, password, nivelAcesso);
   
     const resultado = await userHelper.createUser(newUser);
+
+    
   
     if (resultado.sucesso) {
       return {

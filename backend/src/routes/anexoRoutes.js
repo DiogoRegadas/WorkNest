@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../middlewares/uploadMiddleware');
 const { downloadAnexo } = require('../controllers/anexoController');
-const authMiddleware = require('../middlewares/authMiddleware');
+const {authMiddleware} = require('../middlewares/authMiddleware');
 
 // Upload de anexo
 router.post('/upload', authMiddleware, upload.single('ficheiro'), (req, res) => {

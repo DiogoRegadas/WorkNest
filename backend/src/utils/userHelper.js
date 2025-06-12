@@ -19,8 +19,10 @@ const createUser = async (userModel) => {
         email: userModel.email,
         password: userModel.password, // já está encriptada
         localidade: userModel.localidade,
-        nivelAcesso: 1,
+        nivelAcesso: userModel.nivelAcesso || 1, // acesso básico por defeito
       });
+
+      console.log('Criando novo utilizador:', novoUser);
   
       const utilizadorCriado = await novoUser.save();
       console.log('✅ Utilizador criado:', utilizadorCriado);

@@ -1,6 +1,6 @@
 const express = require('express');
 const { criarProjeto, listarProjetos, obterProjetoPorId, atualizarProjeto, apagarProjeto, obterProjetoCompleto, removerColaborador, transferirOwner} = require('../controllers/projectController');
-const authMiddleware = require('../middlewares/authMiddleware.js');
+const {authMiddleware} = require('../middlewares/authMiddleware.js');
 const router = express.Router();
 
 

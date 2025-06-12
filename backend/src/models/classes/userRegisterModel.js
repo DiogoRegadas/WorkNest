@@ -4,13 +4,15 @@ class UserRegisterModel {
     #localidade;
     #email;
     #password;
+    #nivelAcesso; // Padrão para utilizadores comuns
   
-    constructor(firstName, lastName, localidade, email, password) {
+    constructor(firstName, lastName, localidade, email, password, nivelAcesso) {
       this.firstName = firstName;
       this.lastName = lastName;
       this.localidade = localidade;
       this.email = email;
-      this.password = password; // Validação feita no setter
+      this.password = password;
+      this.nivelAcesso = nivelAcesso; // Padrão para utilizadores comuns
     }
   
     // Getters
@@ -53,6 +55,13 @@ class UserRegisterModel {
   
     set password(value) {
       this.#password = value;
+    }
+
+    get nivelAcesso() {
+      return this.#nivelAcesso;
+    }
+    set nivelAcesso(value) {
+      this.#nivelAcesso = value;
     }
   
     
