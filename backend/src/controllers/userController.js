@@ -16,11 +16,13 @@ exports.registerUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
     try {
         const resultado = await UserService.loginUser(req.body);
-        await LogService.criarLog({
-          userId: resultado.utilizador.id,
-          tipo: 'auth',
-          detalhe: 'Login efetuado com sucesso'
-        });
+        if (resultado.status === 200 && resultado.resposta.utilizador?.id) {
+      await LogService.criarLog({
+        userId: resultado.resposta.utilizador.id,
+        tipo: 'auth',
+        detalhe: 'Login efetuado com sucesso'
+      });
+    }
         return res.status(resultado.status).json(resultado.resposta);
     } catch (error) {
         console.error("❌ Erro no login controller:", error);

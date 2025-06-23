@@ -62,8 +62,7 @@ const loginUser = async (dados) => {
                 mensagem: resultado.mensagem,
                 token: resultado.token,
                 refreshToken: resultado.refreshToken,
-                utilizador: resultado.utilizador,
-                
+                utilizador: resultado.utilizador,    
             }
         };
     } else {
