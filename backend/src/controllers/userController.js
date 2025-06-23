@@ -17,7 +17,7 @@ exports.loginUser = async (req, res) => {
     try {
         const resultado = await UserService.loginUser(req.body);
         await LogService.criarLog({
-          userId: resultado.utilizador._id,
+          userId: resultado.utilizador.id,
           tipo: 'auth',
           detalhe: 'Login efetuado com sucesso'
         });
