@@ -4,6 +4,7 @@ const TopicoModel = require('../models/classes/topicModel');
 const Topico = require('../models/mongoose/topicMongo');
 const ProjetoService = require('./projectServices');
 const Categoria = require('../models/mongoose/categoriaMongo');
+const Projeto = require('../models/mongoose/projectMongo');
 const { getIO } = require('../socketServer');
 
 const criarTopico = async (dados) => {
@@ -22,7 +23,19 @@ const criarTopico = async (dados) => {
 
         await Categoria.findByIdAndUpdate(dados.idCategoria, {
             $push: { listaTopicos: topicoMongo._id }
-          });
+        });
+
+        await Projeto.findByIdAndUpdate(dados.idProjeto, {
+            $set: { updatedAt: new Date() }
+        });
+
+        // 🔍 Criar log
+        const LogService = require('./LogService');
+        await LogService.criarLog({
+            tipo: 'topico',
+            projetoId: dados.idProjeto,
+            detalhe: `Tópico criado: ${topicoMongo.titulo}`
+        });
 
         // 🔁 Emitir projeto completo atualizado
         const io = getIO();
@@ -45,6 +58,7 @@ const criarTopico = async (dados) => {
         };
     }
 };
+
 
 const listarTopicos = async () => {
     const topicos = await Topico.find().populate('idCategoria', 'nome');
@@ -74,15 +88,24 @@ const obterTopicoPorId = async (id) => {
 };
 
 const atualizarTopico = async (id, dados) => {
-    console.log("11111111");
     try {
-        const topico = await Topico.findByIdAndUpdate(id, dados.titulo, { new: true });
+        const topico = await Topico.findByIdAndUpdate(id, dados, { new: true });
         if (!topico) {
             return {
                 status: 404,
                 resposta: { sucesso: false, mensagem: 'Tópico não encontrado.' }
             };
         }
+
+        await Projeto.findByIdAndUpdate(dados.idProjeto, { $set: { updatedAt: new Date() } });
+
+        // 🔍 Criar log
+        const LogService = require('./LogService');
+        await LogService.criarLog({
+            tipo: 'topico',
+            projetoId: dados.idProjeto,
+            detalhe: `Tópico atualizado: ${topico.titulo}`
+        });
 
         const io = getIO();
         const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(dados.idProjeto);
@@ -104,6 +127,7 @@ const atualizarTopico = async (id, dados) => {
         };
     }
 };
+
 
 const apagarTopico = async (id) => {
     try {

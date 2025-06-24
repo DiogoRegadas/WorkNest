@@ -24,23 +24,26 @@ const criarCategoria = async (dados) => {
 
         await Projeto.findByIdAndUpdate(
             dados.idProjeto,
-            { $push: { listaCategorias: categoriaMongo._id } },
+            { $push: { listaCategorias: categoriaMongo._id },
+              $set: { updatedAt: new Date() } },
             { new: true }
-          );
+        );
 
-          
-          console.log('🔍 ProjetoService:', ProjetoService);
+        // 🔍 Criar log
+        const LogService = require('./LogService');
+        await LogService.criarLog({
+            tipo: 'categoria',
+            projetoId: dados.idProjeto,
+            detalhe: `Categoria criada: ${categoriaMongo.nome}`
+        });
 
         const io = getIO();        
-        // dentro da tua função criarCategoria
-const resultadoProjeto = await require('./projectServices').obterProjetoCompletoPorId(dados.idProjeto);
+        const resultadoProjeto = await require('./projectServices').obterProjetoCompletoPorId(dados.idProjeto);
 
-        
         if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
             io.to(`projeto:${dados.idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
             console.log(`📢 Projeto completo emitido via WebSocket para sala projeto:${dados.idProjeto}`);
         }
-      
 
         return {
             status: 201,
@@ -54,6 +57,7 @@ const resultadoProjeto = await require('./projectServices').obterProjetoCompleto
         };
     }
 };
+
 
 const listarCategorias = async () => {
     const categorias = await Categoria.find().populate('idProjeto', 'nome');
@@ -83,39 +87,49 @@ const obterCategoriaPorId = async (id) => {
 };
 
 const atualizarCategoria = async (id, dados) => {
-    try {
-      const categoria = await Categoria.findByIdAndUpdate(id, dados, { new: true });
-      if (!categoria) {
-        return {
-          status: 404,
-          resposta: { sucesso: false, mensagem: 'Categoria não encontrada.' }
-        };
-      }
-  
-      const io = getIO();
-  
-      // 🔍 Garantir que temos sempre o id do projeto
-      const idProjeto = dados.idProjeto || categoria.idProjeto;
-  
-      const resultadoProjeto = await require('./projectServices').obterProjetoCompletoPorId(idProjeto);
-  
-      if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
-        io.to(`projeto:${idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
-        console.log(`📢 Projeto completo emitido via WebSocket para sala projeto:${idProjeto}`);
-      }
-  
+  try {
+    const categoria = await Categoria.findByIdAndUpdate(id, dados, { new: true });
+    if (!categoria) {
       return {
-        status: 200,
-        resposta: { sucesso: true, mensagem: 'Categoria atualizada com sucesso.', categoria }
-      };
-    } catch (error) {
-      console.error("❌ Erro ao atualizar categoria:", error);
-      return {
-        status: 500,
-        resposta: { sucesso: false, mensagem: 'Erro ao atualizar categoria.' }
+        status: 404,
+        resposta: { sucesso: false, mensagem: 'Categoria não encontrada.' }
       };
     }
-  };
+
+    const io = getIO();
+    const idProjeto = dados.idProjeto || categoria.idProjeto;
+
+    await Projeto.findByIdAndUpdate(idProjeto, { $set: { updatedAt: new Date() } });
+
+    // 🔍 Criar log
+    const LogService = require('./LogService');
+    await LogService.criarLog({
+      tipo: 'categoria',
+      projetoId: idProjeto,
+      detalhe: `Categoria atualizada: ${categoria.nome}`
+    });
+
+    const resultadoProjeto = await require('./projectServices').obterProjetoCompletoPorId(idProjeto);
+
+    if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
+      io.to(`projeto:${idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
+      console.log(`📢 Projeto completo emitido via WebSocket para sala projeto:${idProjeto}`);
+    }
+
+    return {
+      status: 200,
+      resposta: { sucesso: true, mensagem: 'Categoria atualizada com sucesso.', categoria }
+    };
+  } catch (error) {
+    console.error("❌ Erro ao atualizar categoria:", error);
+    return {
+      status: 500,
+      resposta: { sucesso: false, mensagem: 'Erro ao atualizar categoria.' }
+    };
+  }
+};
+
+
   
 
   const apagarCategoria = async (id) => {

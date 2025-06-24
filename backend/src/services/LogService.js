@@ -1,10 +1,10 @@
-// services/LogService.js
 const Log = require('../models/mongoose/Log');
 
-async function criarLog({ userId, tipo, detalhe }) {
+async function criarLog({ userId, projetoId, tipo, detalhe }) {
   try {
     const novoLog = new Log({
-      userId,
+      userId: userId || null,
+      projetoId: projetoId || null,
       tipo,
       detalhe,
       data: new Date()
@@ -20,7 +20,10 @@ async function criarLog({ userId, tipo, detalhe }) {
 
 async function listarLogsPorTipo(tipo) {
   try {
-    const logs = await Log.find({ tipo }).populate('userId', 'nome email');
+    const logs = await Log.find({ tipo })
+      .populate('userId', 'nome email')
+      .populate('projetoId', 'nome');
+      
     return { status: 200, resposta: logs };
   } catch (erro) {
     console.error('Erro ao listar logs:', erro);

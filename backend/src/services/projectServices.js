@@ -2,62 +2,70 @@
 const ProjetoModel = require('../models/classes/projectModel');
 const Projeto = require('../models/mongoose/projectMongo');
 const CategoriaService = require('./categoriaServices');
+const EventoService = require('./eventoServices');
 
 const criarProjeto = async (dados) => {
-    try {
-        const novoProjeto = new ProjetoModel(dados.nome, dados.descricao, dados.owner);
+  try {
+    const novoProjeto = new ProjetoModel(dados.nome, dados.descricao, dados.owner);
 
-        // Primeiro criar o Projeto SEM categorias
-        const projetoMongo = new Projeto({
-            nome: novoProjeto.nome,
-            descricao: novoProjeto.descricao,
-            owner: novoProjeto.owner,
-            listaUtilizadores: [],
-            listaCategorias: []
-        });
+    // Primeiro criar o Projeto SEM categorias
+    const projetoMongo = new Projeto({
+      nome: novoProjeto.nome,
+      descricao: novoProjeto.descricao,
+      deadline: dados.deadline, // 👈 já aceitaste o deadline
+      owner: novoProjeto.owner,
+      listaUtilizadores: [],
+      listaCategorias: []
+    });
 
-        await projetoMongo.save();
-        console.log('ID DO PROJETO - ', projetoMongo._id);
+    await projetoMongo.save();
+    console.log('ID DO PROJETO - ', projetoMongo._id);
 
-        const categoriasCriadas = [];
+    const categoriasCriadas = [];
 
-        // Se receber categorias (array de nomes)
-        if (dados.categorias && dados.categorias.length > 0) {
-            // Criar todas as categorias associadas ao projeto
-            for (const categoriaNome of dados.categorias) {
-                const novaCategoria = {
-                    nome: categoriaNome,
-                    descricao: '', // Se quiseres podes receber descrição também
-                    idProjeto: projetoMongo._id
-                };
-                const resultadoCategoria = await CategoriaService.criarCategoria(novaCategoria);
-
-                if (resultadoCategoria.status === 201) {
-                    categoriasCriadas.push(resultadoCategoria.resposta.categoria._id);
-                }
-            }
-
-            // Atualizar o Projeto com as categorias criadas
-            projetoMongo.listaCategorias = categoriasCriadas;
-            await projetoMongo.save();
+    if (dados.categorias && dados.categorias.length > 0) {
+      for (const categoriaNome of dados.categorias) {
+        const novaCategoria = {
+          nome: categoriaNome,
+          descricao: '',
+          idProjeto: projetoMongo._id
+        };
+        const resultadoCategoria = await CategoriaService.criarCategoria(novaCategoria);
+        if (resultadoCategoria.status === 201) {
+          categoriasCriadas.push(resultadoCategoria.resposta.categoria._id);
         }
+      }
 
-        // Popular o projeto atualizado com categorias
-        const projetoFinal = await Projeto.findById(projetoMongo._id)
-            .populate('listaCategorias', 'nome descricao')
-            .populate('owner', 'nome email');
-
-        return {
-            status: 201,
-            resposta: { sucesso: true, mensagem: 'Projeto criado com sucesso.', projeto: projetoFinal }
-        };
-    } catch (error) {
-        console.error("❌ Erro no serviço ao criar projeto:", error);
-        return {
-            status: 500,
-            resposta: { sucesso: false, mensagem: 'Erro ao criar projeto.' }
-        };
+      projetoMongo.listaCategorias = categoriasCriadas;
+      await projetoMongo.save();
     }
+
+    // ✅ Criar evento de deadline se existir
+    if (dados.deadline) {
+      await EventoService.criarEvento({
+        tipo: 'projeto',
+        referenciaId: projetoMongo._id,
+        nome: `Deadline: ${dados.nome}`,
+        data: dados.deadline,
+        idProjeto: projetoMongo._id
+      });
+    }
+
+    const projetoFinal = await Projeto.findById(projetoMongo._id)
+      .populate('listaCategorias', 'nome descricao')
+      .populate('owner', 'nome email');
+
+    return {
+      status: 201,
+      resposta: { sucesso: true, mensagem: 'Projeto criado com sucesso.', projeto: projetoFinal }
+    };
+  } catch (error) {
+    console.error("❌ Erro no serviço ao criar projeto:", error);
+    return {
+      status: 500,
+      resposta: { sucesso: false, mensagem: 'Erro ao criar projeto.' }
+    };
+  }
 };
 
 const listarProjetos = async (idUser) => {
@@ -193,6 +201,7 @@ const obterProjetoCompletoPorId = async (idProjeto) => {
           _id: projeto._id,
           nome: projeto.nome,
           descricao: projeto.descricao,
+          deadline: projeto.deadline,
           owner: projeto.owner,
           listaUtilizadores: projeto.listaUtilizadores, // ✅ Adicionado
           categorias: categoriasComTopicos

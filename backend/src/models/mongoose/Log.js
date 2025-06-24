@@ -6,9 +6,17 @@ const LogSchema = new mongoose.Schema({
     ref: 'Utilizador',
     required: false,
   },
+  projetoId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Projeto',
+    required: false,
+  },
   tipo: {
     type: String,
-    enum: ['auth', 'logout', 'error', 'update', 'view', 'custom'],
+    enum: [
+      'auth', 'logout', 'error', 'update', 'view', 'custom',
+      'categoria', 'topico', 'tarefa', 'projeto' // 👈 adicionados
+    ],
     required: true,
   },
   detalhe: {

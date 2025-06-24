@@ -1,6 +1,7 @@
 const TarefaModel = require('../models/classes/tarefaModel');
 const Tarefa = require('../models/mongoose/tarefaMongo');
 const Topico = require('../models/mongoose/topicMongo');
+const Projeto = require('../models/mongoose/projectMongo');
 const ProjetoService = require('./projectServices');
 const { getIO } = require('../socketServer');
 
@@ -29,19 +30,40 @@ const criarTarefa = async (dados) => {
     await tarefaMongo.save();
 
     await Topico.findByIdAndUpdate(dados.idTopico, {
-                $push: { listaTarefas: tarefaMongo._id }
+      $push: { listaTarefas: tarefaMongo._id }
     });
 
-  
-            // 🔁 Emitir projeto completo atualizado
-            const io = getIO();
-            const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(dados.idProjeto);
-    
-            if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
-                io.to(`projeto:${dados.idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
-                console.log(`📢 Projeto completo emitido via WebSocket para sala projeto:${dados.idProjeto}`);
-            }
-  
+    // ✅ Criar evento se houver dataEntrega
+    if (dados.dataEntrega && dados.idProjeto) {
+      const EventoService = require('./eventoService');
+      await EventoService.criarEvento({
+        tipo: 'tarefa',
+        referenciaId: tarefaMongo._id,
+        nome: `Entrega: ${dados.titulo}`,
+        data: dados.dataEntrega,
+        idProjeto: dados.idProjeto
+      });
+    }
+
+    // ✅ Atualizar updatedAt do projeto
+    await Projeto.findByIdAndUpdate(dados.idProjeto, { $set: { updatedAt: new Date() } });
+
+    // ✅ Criar log
+    const LogService = require('./LogService');
+    await LogService.criarLog({
+      tipo: 'tarefa',
+      projetoId: dados.idProjeto,
+      detalhe: `Tarefa criada: ${tarefaMongo.titulo}`
+    });
+
+    // 🔁 Emitir projeto completo atualizado
+    const io = getIO();
+    const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(dados.idProjeto);
+
+    if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
+      io.to(`projeto:${dados.idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
+      console.log(`📢 Projeto completo emitido via WebSocket para sala projeto:${dados.idProjeto}`);
+    }
 
     return {
       status: 201,
@@ -55,6 +77,8 @@ const criarTarefa = async (dados) => {
     };
   }
 };
+
+
 
 const listarTarefas = async () => {
   try {
@@ -103,11 +127,10 @@ const obterTarefaPorId = async (id) => {
 
 const atualizarTarefa = async (id, dados) => {
   try {
-    const { respostaDescricao, status} = dados;
+    const { respostaDescricao, status } = dados;
 
     console.log("🔄 Atualizando tarefa com dados:", respostaDescricao, status);
 
-    // Separar campos para $set e $push
     const update = {};
 
     if (respostaDescricao !== undefined || status !== undefined) {
@@ -115,8 +138,6 @@ const atualizarTarefa = async (id, dados) => {
       if (respostaDescricao !== undefined) update.$set.respostaDescricao = respostaDescricao;
       if (status !== undefined) update.$set.status = status;
     }
-
-    
 
     const tarefa = await Tarefa.findByIdAndUpdate(id, update, { new: true });
 
@@ -129,13 +150,23 @@ const atualizarTarefa = async (id, dados) => {
 
     console.log("📨 ID do projeto recebido:", dados.idProjeto);
 
+    await Projeto.findByIdAndUpdate(dados.idProjeto, { $set: { updatedAt: new Date() } });
+
+    // ✅ Criar log
+    const LogService = require('./LogService');
+    await LogService.criarLog({
+      tipo: 'tarefa',
+      projetoId: dados.idProjeto,
+      detalhe: `Tarefa atualizada: ${tarefa.titulo}`
+    });
+
     const io = getIO();
-            const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(dados.idProjeto);
-    
-            if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
-                io.to(`projeto:${dados.idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
-                console.log(`📢 Projeto completo emitido via WebSocket para sala projeto:${dados.idProjeto}`);
-            }
+    const resultadoProjeto = await ProjetoService.obterProjetoCompletoPorId(dados.idProjeto);
+
+    if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
+      io.to(`projeto:${dados.idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
+      console.log(`📢 Projeto completo emitido via WebSocket para sala projeto:${dados.idProjeto}`);
+    }
 
     return {
       status: 200,
@@ -153,6 +184,7 @@ const atualizarTarefa = async (id, dados) => {
     };
   }
 };
+
 
 
 const uploadFicheirosParaTarefa = async (idTarefa, files) => {
