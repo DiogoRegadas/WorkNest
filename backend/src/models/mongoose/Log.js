@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const LogSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Utilizador',
+    ref: 'User',
     required: false,
   },
   projetoId: {
