@@ -35,7 +35,7 @@ const criarTarefa = async (dados) => {
 
     // ✅ Criar evento se houver dataEntrega
     if (dados.dataEntrega && dados.idProjeto) {
-      const EventoService = require('./eventoService');
+      const EventoService = require('./eventoServices');
       await EventoService.criarEvento({
         tipo: 'tarefa',
         referenciaId: tarefaMongo._id,
