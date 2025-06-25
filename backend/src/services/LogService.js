@@ -39,6 +39,9 @@ const listarLogsPorProjetos = async (projetoIds) => {
       .populate('userId', 'nome')
       .populate('projetoId', 'nome');
 
+
+    console.Log('Logs encontrados:', logs);
+
     return { status: 200, resposta: logs };
   } catch (erro) {
     console.error('Erro ao listar logs por projetos:', erro);
