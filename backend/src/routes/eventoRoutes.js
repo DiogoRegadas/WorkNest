@@ -1,19 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const EventoController = require('../controllers/eventoController');
+const { authMiddleware } = require('../middlewares/authMiddleware');
 
-// Apenas importar a rota GET existente do controller
-router.get('/projeto/:idProjeto', EventoController);
+router.get('/projeto/:idProjeto', authMiddleware, EventoController.listarEventosPorProjeto);
 
-// (Opcional: se quiseres listar todos os eventos de todos os projetos)
-router.get('/', async (req, res) => {
-  try {
-    const resultado = await require('../services/eventoServices').listarTodosEventos();
-    res.status(resultado.status).json(resultado.resposta);
-  } catch (erro) {
-    console.error('Erro ao listar todos os eventos:', erro);
-    res.status(500).json({ sucesso: false, mensagem: 'Erro interno.' });
-  }
-});
+// NOVA ROTA para listar eventos com base em vários projetos
+router.post('/calendario', authMiddleware, EventoController.listarEventosPorProjetos);
 
 module.exports = router;

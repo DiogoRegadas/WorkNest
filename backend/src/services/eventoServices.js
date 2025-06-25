@@ -1,4 +1,3 @@
-// services/eventoServices.js
 const Evento = require('../models/mongoose/eventMongo');
 
 const criarEvento = async (dados) => {
@@ -27,7 +26,23 @@ const listarEventosPorProjeto = async (idProjeto) => {
       resposta: { sucesso: true, eventos }
     };
   } catch (erro) {
-    console.error('❌ Erro ao listar eventos:', erro);
+    console.error('❌ Erro ao listar eventos por projeto:', erro);
+    return {
+      status: 500,
+      resposta: { sucesso: false, mensagem: 'Erro ao listar eventos.' }
+    };
+  }
+};
+
+const listarEventosPorProjetos = async (listaIds) => {
+  try {
+    const eventos = await Evento.find({ idProjeto: { $in: listaIds } }).sort({ data: 1 });
+    return {
+      status: 200,
+      resposta: eventos
+    };
+  } catch (erro) {
+    console.error('❌ Erro ao listar eventos por projetos:', erro);
     return {
       status: 500,
       resposta: { sucesso: false, mensagem: 'Erro ao listar eventos.' }
@@ -60,5 +75,6 @@ const apagarEvento = async (id) => {
 module.exports = {
   criarEvento,
   listarEventosPorProjeto,
+  listarEventosPorProjetos, // ✅ função nova
   apagarEvento
 };
