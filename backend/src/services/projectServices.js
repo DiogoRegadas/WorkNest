@@ -288,6 +288,98 @@ const transferirOwner = async (idProjeto, novoOwnerId) => {
   };
 };
 
+const sairDoProjeto = async (idProjeto, idUtilizador) => {
+  try {
+    const projeto = await Projeto.findById(idProjeto);
+    if (!projeto) {
+      return {
+        status: 404,
+        resposta: { sucesso: false, mensagem: 'Projeto não encontrado.' }
+      };
+    }
+
+    // Impedir que o owner saia diretamente (deve usar transferirEExcluir)
+    if (projeto.owner.toString() === idUtilizador) {
+      return {
+        status: 400,
+        resposta: { sucesso: false, mensagem: 'O owner deve transferir a posse antes de sair.' }
+      };
+    }
+
+    projeto.listaUtilizadores = projeto.listaUtilizadores.filter(
+      (uid) => uid.toString() !== idUtilizador
+    );
+
+    await projeto.save();
+
+    // Emitir projeto atualizado
+    const io = require('../socketServer').getIO();
+    const resultadoProjeto = await module.exports.obterProjetoCompletoPorId(idProjeto);
+    if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
+      io.to(`projeto:${idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
+    }
+
+    return {
+      status: 200,
+      resposta: { sucesso: true, mensagem: 'Saiu do projeto com sucesso.' }
+    };
+  } catch (erro) {
+    console.error("❌ Erro ao sair do projeto:", erro);
+    return {
+      status: 500,
+      resposta: { sucesso: false, mensagem: 'Erro ao sair do projeto.' }
+    };
+  }
+};
+
+const transferirEExcluir = async (idProjeto, novoOwnerId) => {
+  try {
+    const projeto = await Projeto.findById(idProjeto);
+    if (!projeto) {
+      return {
+        status: 404,
+        resposta: { sucesso: false, mensagem: 'Projeto não encontrado.' }
+      };
+    }
+
+    const antigoOwnerId = projeto.owner.toString();
+
+    // Garantir que o novo owner está na lista de utilizadores
+    if (!projeto.listaUtilizadores.includes(novoOwnerId)) {
+      projeto.listaUtilizadores.push(novoOwnerId);
+    }
+
+    // Atualizar owner
+    projeto.owner = novoOwnerId;
+
+    // Remover antigo owner da lista de utilizadores
+    projeto.listaUtilizadores = projeto.listaUtilizadores.filter(
+      (uid) => uid.toString() !== antigoOwnerId
+    );
+
+    await projeto.save();
+
+    // Emitir atualização
+    const io = require('../socketServer').getIO();
+    const resultadoProjeto = await module.exports.obterProjetoCompletoPorId(idProjeto);
+    if (resultadoProjeto.status === 200 && resultadoProjeto.resposta?.projeto) {
+      io.to(`projeto:${idProjeto}`).emit('projetoAtualizado', resultadoProjeto.resposta.projeto);
+    }
+
+    return {
+      status: 200,
+      resposta: { sucesso: true, mensagem: 'Posse transferida e owner removido com sucesso.' }
+    };
+  } catch (erro) {
+    console.error("❌ Erro ao transferir e sair:", erro);
+    return {
+      status: 500,
+      resposta: { sucesso: false, mensagem: 'Erro ao transferir posse e sair do projeto.' }
+    };
+  }
+};
+
+
 
 
 
@@ -299,5 +391,7 @@ module.exports = {
     apagarProjeto,
     obterProjetoCompletoPorId,
     removerColaborador,
-    transferirOwner
+    transferirOwner,
+    sairDoProjeto,
+    transferirEExcluir
 };

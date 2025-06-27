@@ -95,3 +95,36 @@ exports.removerColaborador = async (req, res) => {
     }
   };
 
+
+  // ✅ NOVO: colaborador sai do projeto
+exports.sairDoProjeto = async (req, res) => {
+    try {
+        const { idProjeto } = req.params;
+        const idUtilizador = req.user.id;
+        const resultado = await ProjetoService.removerColaborador(idProjeto, idUtilizador);
+        return res.status(resultado.status).json(resultado.resposta);
+    } catch (error) {
+        console.error("❌ Erro ao sair do projeto:", error);
+        return res.status(500).json({ sucesso: false, mensagem: 'Erro ao sair do projeto.' });
+    }
+};
+
+// ✅ NOVO: transferir posse e sair do projeto (para o owner)
+exports.transferirOwnerESair = async (req, res) => {
+    try {
+        const { idProjeto } = req.params;
+        const { novoOwnerId } = req.body;
+        const idOwnerAtual = req.user.id;
+
+        const resultado = await ProjetoService.transferirOwner(idProjeto, novoOwnerId);
+        if (resultado.status !== 200) {
+            return res.status(resultado.status).json(resultado.resposta);
+        }
+
+        const resultadoRemocao = await ProjetoService.removerColaborador(idProjeto, idOwnerAtual);
+        return res.status(resultadoRemocao.status).json(resultadoRemocao.resposta);
+    } catch (error) {
+        console.error("❌ Erro ao transferir posse e sair do projeto:", error);
+        return res.status(500).json({ sucesso: false, mensagem: 'Erro ao transferir posse e sair.' });
+    }
+};
