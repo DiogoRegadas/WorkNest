@@ -35,16 +35,16 @@ const createUser = async (userModel) => {
 
   const loginUser = async (userModel) => {
     try {
-        const user = await User.findOne({ email: userModel.email });
-        if (!user) {
-            return { sucesso: false, mensagem: 'Utilizador não encontrado.' };
-        }
-        
-        // Aqui já não usamos bcrypt — comparamos hashes diretamente
-        const passwordMatch = await bcrypt.compare(userModel.password, user.password);
+    const user = await User.findOne({ email: userModel.email });
+
+    if (!user) {
+      return { sucesso: false, mensagem: '❌ Invalid credentials.' };
+    }
+
+    const passwordMatch = await bcrypt.compare(userModel.password, user.password);
 
     if (!passwordMatch) {
-      return { sucesso: false, mensagem: 'Palavra-passe incorreta.' };
+      return { sucesso: false, mensagem: '❌ Invalid credentials.' };
     }
 
         const token = jwt.sign(
@@ -76,7 +76,7 @@ const createUser = async (userModel) => {
           };
     } catch (erro) {
         console.error('❌ Erro no login:', erro);
-        return { sucesso: false, mensagem: 'Erro ao efetuar login.' };
+        return { sucesso: false, mensagem: '❌ An unexpected error occurred.' };
     }
 };
 
