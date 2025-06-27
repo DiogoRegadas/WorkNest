@@ -105,7 +105,7 @@ const obterTaxaAdesaoFuncionalidades = async () => {
     const totalInteragiram = utilizadoresUnicos.size;
 
     // 2. Obter total de utilizadores da plataforma
-    const User = require('../models/mongoose/User'); // Atualiza o caminho se necessário
+    const User = require('../models/mongoose/userMongo'); // Atualiza o caminho se necessário
     const totalUtilizadores = await User.countDocuments();
 
     const taxa = totalUtilizadores === 0 ? 0 : totalInteragiram / totalUtilizadores;
