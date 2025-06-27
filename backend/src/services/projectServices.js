@@ -257,7 +257,7 @@ const removerColaborador = async (idProjeto, idUtilizador) => {
 };
 
 
-const transferirOwner = async (idProjeto, novoOwnerId) => {
+const transferirOwner = async (idProjeto, novoOwnerId, utilizadorAtualId) => {
   const projeto = await Projeto.findById(idProjeto);
   if (!projeto) {
     return {
@@ -266,10 +266,24 @@ const transferirOwner = async (idProjeto, novoOwnerId) => {
     };
   }
 
-  if (!projeto.listaUtilizadores.includes(novoOwnerId)) {
-    projeto.listaUtilizadores.push(novoOwnerId);
+  if (projeto.owner.toString() !== utilizadorAtualId) {
+    return {
+      status: 403,
+      resposta: { sucesso: false, mensagem: 'Apenas o owner atual pode transferir a posse.' }
+    };
   }
 
+  // Remover o novo owner da lista de colaboradores, caso esteja
+  projeto.listaUtilizadores = projeto.listaUtilizadores.filter(
+    (util) => util.toString() !== novoOwnerId
+  );
+
+  // Adicionar o antigo owner (utilizador atual) à lista de colaboradores, caso não esteja
+  if (!projeto.listaUtilizadores.includes(utilizadorAtualId)) {
+    projeto.listaUtilizadores.push(utilizadorAtualId);
+  }
+
+  // Atualizar o novo owner
   projeto.owner = novoOwnerId;
   await projeto.save();
 
