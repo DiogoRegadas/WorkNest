@@ -266,6 +266,9 @@ const transferirOwner = async (idProjeto, novoOwnerId, utilizadorAtualId) => {
     };
   }
 
+  console.log('projeto.owner', projeto.owner);
+  console.log('Utilizador Atual', utilizadorAtualId);
+
   if (projeto.owner.toString() !== utilizadorAtualId) {
     return {
       status: 403,
