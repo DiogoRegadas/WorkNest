@@ -87,7 +87,7 @@ exports.removerColaborador = async (req, res) => {
   try {
     const { idProjeto } = req.params;
     const { novoOwnerId } = req.body;
-    const idRemetente = req.userId; // ← vem do authMiddleware
+    const idRemetente = req.user?.id; // ← vem do authMiddleware
 
     const resultado = await ProjetoService.transferirOwner(idProjeto, novoOwnerId, idRemetente);
     return res.status(resultado.status).json(resultado.resposta);
