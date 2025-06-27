@@ -4,17 +4,24 @@ const Projeto = require('../models/mongoose/projectMongo'); // ← IMPORTANTE
 
 const enviarPedido = async (dados, idRemetente) => {
   try {
-    const pedidoExistente = await Pedido.findOne({
+    const filtroBase = {
       tipo: dados.tipo,
       de: idRemetente,
       para: dados.para,
       estado: 'pendente'
-    });
+    };
+
+    // Se for pedido de projeto, verifica também o idProjeto
+    if (dados.tipo === 'projeto' && dados.idProjeto) {
+      filtroBase.idProjeto = dados.idProjeto;
+    }
+
+    const pedidoExistente = await Pedido.findOne(filtroBase);
 
     if (pedidoExistente) {
       return {
         status: 400,
-        resposta: { sucesso: false, mensagem: 'Já existe um pedido pendente para este utilizador.' }
+        resposta: { sucesso: false, mensagem: 'Já existe um pedido pendente semelhante para este utilizador.' }
       };
     }
 
@@ -42,6 +49,7 @@ const enviarPedido = async (dados, idRemetente) => {
     };
   }
 };
+
 
 const responderPedido = async (idPedido, resposta, idUtilizador) => {
   try {
