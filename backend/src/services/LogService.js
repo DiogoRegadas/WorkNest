@@ -89,9 +89,48 @@ const obterTaxaRetorno = async () => {
   }
 };
 
+const obterTaxaAdesaoFuncionalidades = async () => {
+  try {
+    // 1. Buscar todos os logs de tipo 'categoria' ou 'tarefa'
+    const logsFuncionais = await Log.find({ tipo: { $in: ['categoria', 'tarefa'] } });
+
+    const utilizadoresUnicos = new Set();
+
+    logsFuncionais.forEach(log => {
+      if (log.userId) {
+        utilizadoresUnicos.add(log.userId.toString());
+      }
+    });
+
+    const totalInteragiram = utilizadoresUnicos.size;
+
+    // 2. Obter total de utilizadores da plataforma
+    const User = require('../models/mongoose/User'); // Atualiza o caminho se necessário
+    const totalUtilizadores = await User.countDocuments();
+
+    const taxa = totalUtilizadores === 0 ? 0 : totalInteragiram / totalUtilizadores;
+
+    return {
+      status: 200,
+      resposta: {
+        taxaAdesao: taxa,
+        totalUtilizadores,
+        totalInteragiram
+      }
+    };
+  } catch (erro) {
+    console.error('❌ Erro ao calcular taxa de adesão:', erro);
+    return {
+      status: 500,
+      resposta: { mensagem: 'Erro ao calcular taxa de adesão às funcionalidades.' }
+    };
+  }
+};
+
 module.exports = {
   criarLog,
   listarLogsPorTipo,
   listarLogsPorProjetos,
-    obterTaxaRetorno
+    obterTaxaRetorno,
+    calcularTaxaAdesaoFuncionalidades
 };

@@ -20,3 +20,14 @@ exports.listarLogsPorProjetos = async (req, res) => {
     return res.status(500).json({ erro: "Erro interno no servidor" });
   }
 };
+
+exports.obterTaxaAdesaoFuncionalidades = async (req, res) => {
+  try {
+    const resultado = await LogService.calcularTaxaAdesaoFuncionalidades();
+    return res.status(resultado.status).json(resultado.resposta);
+  } catch (erro) {
+    console.error("❌ Erro ao obter taxa de adesão:", erro);
+    return res.status(500).json({ erro: "Erro ao obter taxa de adesão" });
+  }
+};
+
