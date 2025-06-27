@@ -38,13 +38,13 @@ const createUser = async (userModel) => {
     const user = await User.findOne({ email: userModel.email });
 
     if (!user) {
-      return { sucesso: false, mensagem: '❌ Invalid credentials.' };
+      return { sucesso: false, mensagem: 'Invalid credentials.' };
     }
 
     const passwordMatch = await bcrypt.compare(userModel.password, user.password);
 
     if (!passwordMatch) {
-      return { sucesso: false, mensagem: '❌ Invalid credentials.' };
+      return { sucesso: false, mensagem: 'Invalid credentials.' };
     }
 
         const token = jwt.sign(
