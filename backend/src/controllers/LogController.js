@@ -23,7 +23,7 @@ exports.listarLogsPorProjetos = async (req, res) => {
 
 exports.obterTaxaAdesaoFuncionalidades = async (req, res) => {
   try {
-    const resultado = await LogService.calcularTaxaAdesaoFuncionalidades();
+    const resultado = await LogService.obterTaxaAdesaoFuncionalidades();
     return res.status(resultado.status).json(resultado.resposta);
   } catch (erro) {
     console.error("❌ Erro ao obter taxa de adesão:", erro);
