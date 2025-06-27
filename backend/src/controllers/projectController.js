@@ -83,17 +83,20 @@ exports.removerColaborador = async (req, res) => {
     }
   };
   
-  exports.transferirOwner = async (req, res) => {
-    try {
-      const { idProjeto } = req.params;
-      const { novoOwnerId } = req.body;
-      const resultado = await ProjetoService.transferirOwner(idProjeto, novoOwnerId);
-      return res.status(resultado.status).json(resultado.resposta);
-    } catch (error) {
-      console.error("❌ Erro ao transferir owner:", error);
-      return res.status(500).json({ sucesso: false, mensagem: 'Erro ao transferir posse.' });
-    }
-  };
+ exports.transferirOwner = async (req, res) => {
+  try {
+    const { idProjeto } = req.params;
+    const { novoOwnerId } = req.body;
+    const idRemetente = req.userId; // ← vem do authMiddleware
+
+    const resultado = await ProjetoService.transferirOwner(idProjeto, novoOwnerId, idRemetente);
+    return res.status(resultado.status).json(resultado.resposta);
+  } catch (error) {
+    console.error("❌ Erro ao transferir owner:", error);
+    return res.status(500).json({ sucesso: false, mensagem: 'Erro ao transferir posse.' });
+  }
+};
+
 
 
   // ✅ NOVO: colaborador sai do projeto
