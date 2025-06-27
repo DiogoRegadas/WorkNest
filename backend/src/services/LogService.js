@@ -49,8 +49,45 @@ const listarLogsPorProjetos = async (projetoIds) => {
   }
 };
 
+const obterTaxaRetorno = async () => {
+  try {
+    const logs = await Log.find({ tipo: 'auth' }).sort({ data: 1 });
+
+    const mapaUtilizadores = new Map();
+
+    logs.forEach(log => {
+      const userId = log.userId?.toString();
+      if (!mapaUtilizadores.has(userId)) {
+        mapaUtilizadores.set(userId, 1);
+      } else {
+        mapaUtilizadores.set(userId, mapaUtilizadores.get(userId) + 1);
+      }
+    });
+
+    const totalUtilizadores = mapaUtilizadores.size;
+    const utilizadoresQueVoltaram = Array.from(mapaUtilizadores.values()).filter(v => v > 1).length;
+    const taxa = totalUtilizadores === 0 ? 0 : utilizadoresQueVoltaram / totalUtilizadores;
+
+    return {
+      status: 200,
+      resposta: {
+        taxaRetorno: taxa,
+        totalUtilizadores,
+        utilizadoresQueVoltaram
+      }
+    };
+  } catch (erro) {
+    console.error('❌ Erro ao calcular taxa de retorno:', erro);
+    return {
+      status: 500,
+      resposta: { mensagem: 'Erro ao calcular taxa de retorno.' }
+    };
+  }
+};
+
 module.exports = {
   criarLog,
   listarLogsPorTipo,
-  listarLogsPorProjetos
+  listarLogsPorProjetos,
+    obterTaxaRetorno
 };
