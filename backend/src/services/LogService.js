@@ -132,5 +132,5 @@ module.exports = {
   listarLogsPorTipo,
   listarLogsPorProjetos,
     obterTaxaRetorno,
-    calcularTaxaAdesaoFuncionalidades
+    obterTaxaAdesaoFuncionalidades
 };
