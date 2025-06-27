@@ -68,6 +68,10 @@ const obterTaxaRetorno = async () => {
     const utilizadoresQueVoltaram = Array.from(mapaUtilizadores.values()).filter(v => v > 1).length;
     const taxa = totalUtilizadores === 0 ? 0 : utilizadoresQueVoltaram / totalUtilizadores;
 
+    console.log('Total de utilizadores:', totalUtilizadores);
+    console.log('Utilizadores que voltaram:', utilizadoresQueVoltaram); 
+    console.log('Taxa de retorno:', taxa);
+
     return {
       status: 200,
       resposta: {
