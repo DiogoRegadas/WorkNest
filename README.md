@@ -1,68 +1,108 @@
-# WorkNest
-WorkNest é uma plataforma de colaboração para estudantes e pequenas equipas, focada na gestão de projetos, organização de tarefas e comunicação eficiente. O sistema permite a criação de projetos, partilha de arquivos, organização de conversas por categorias/tópicos e um calendário de prazos
+# WorkNest — Project Management & Collaboration Platform  
+### Academic Final Project (BSc Computer Science & Engineering)
 
-📌 Bibliotecas Principais (Essenciais para o Backend)
-Estas são as bibliotecas fundamentais para o funcionamento da API.
+![Status](https://img.shields.io/badge/status-completed-blue)
+![Type](https://img.shields.io/badge/project-academic-orange)
+![Stack](https://img.shields.io/badge/stack-Full--Stack-green)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-1️⃣ express
-É um framework web para Node.js que simplifica a criação do servidor e das rotas da API.
-Permite definir rotas, responder a pedidos HTTP e usar middlewares para processar os dados.
-2️⃣ mongoose
-É um ORM (Object-Relational Mapping) para MongoDB.
-Permite definir modelos e esquemas para estruturar os dados na base de dados.
-Facilita a interação com MongoDB sem precisar de escrever queries diretas.
-3️⃣ dotenv
-Permite armazenar variáveis de ambiente num ficheiro .env.
-Assim, podemos manter credenciais secretas (como a chave JWT e a ligação à BD) fora do código.
-4️⃣ jsonwebtoken (JWT)
-Gera e valida tokens de autenticação.
-Permite que os utilizadores façam login e sejam identificados sem armazenar sessões no servidor.
-Muito utilizado para sistemas de login seguro e escalável.
-5️⃣ bcrypt
-Serve para encriptar passwords antes de as armazenar na base de dados.
-Protege as credenciais dos utilizadores contra ataques caso a base de dados seja comprometida.
-6️⃣ cors
-Permite que o frontend e o backend comuniquem mesmo estando em domínios diferentes.
-Evita erros de CORS Policy quando fazemos pedidos de APIs em aplicações web.
+WorkNest is an **academic full-stack project** developed as the final assignment of my **BSc in Computer Science and Engineering**.  
+It is a **collaboration and project management platform** designed to centralize multiple productivity functionalities into a single space — helping reduce **digital fatigue** caused by constant switching between scattered tools (ex.: Trello, Slack, Google Docs, Notion, etc.)
 
+Designed with a strong focus on **functional centralization**, usability, and modern development practices.
 
-📌 Bibliotecas Opcionais (Melhoram a Segurança e Funcionalidade)
-Estas dependências não são obrigatórias, mas melhoram a segurança, performance e usabilidade da API.
+---
 
-7️⃣ express-validator
-Ajuda a validar inputs do utilizador antes de os processar.
-Evita dados incorretos ou perigosos (ex.: emails inválidos, SQL injection).
-8️⃣ multer
-Permite fazer upload de ficheiros como imagens e documentos.
-Muito útil para armazenar anexos nos projetos da plataforma.
-9️⃣ morgan
-Regista todas as requisições HTTP no terminal.
-Ajuda a monitorizar o tráfego e encontrar erros mais rapidamente.
-🔟 helmet
-Adiciona camadas de segurança à API para proteger contra ataques web comuns.
-Evita Cross-Site Scripting (XSS), Clickjacking e outras vulnerabilidades.
-1️⃣1️⃣ compression
-Comprime as respostas da API para melhorar a performance.
-Reduz o tamanho dos dados enviados para o cliente.
-1️⃣2️⃣ socket.io
-Permite comunicação em tempo real através de WebSockets.
-Pode ser usado para chats, notificações em tempo real e atualizações dinâmicas.
-1️⃣3️⃣ nodemailer
-Permite enviar emails pelo backend.
-Pode ser usado para recuperação de senha, notificações de projetos e confirmações de conta.
+## 🎯 **Project Goals**
 
+- Develop a unified platform combining project management + communication tools  
+- Reduce "digital fatigue" caused by fragmented platforms  
+- Explore real-time collaboration features  
+- Apply clean software engineering practices learned across the degree  
+- Demonstrate full-stack development and architectural design  
 
-📌 Bibliotecas de Desenvolvimento (Apenas para Ambiente de Dev)
-Estas bibliotecas não são usadas na produção, apenas para facilitar o desenvolvimento.
+This was built as an **individual academic project**, with full responsibility for design, architecture, development, testing, and documentation.
 
-1️⃣4️⃣ nodemon
-Reinicia automaticamente o servidor sempre que alteras o código.
-Muito útil para evitar parar e reiniciar manualmente o backend após cada mudança.
-1️⃣5️⃣ dotenv-cli
-Facilita a gestão de variáveis de ambiente quando usamos diferentes ficheiros .env para diferentes ambientes (dev, produção).
-1️⃣6️⃣ jest
-Framework para testes automatizados no backend.
-Permite verificar se os endpoints e funcionalidades do backend estão a funcionar corretamente.
-1️⃣7️⃣ supertest
-Usado junto com Jest para testar APIs.
-Permite simular requisições HTTP e verificar se a API responde corretamente.
+---
+
+## 🛠️ **Technologies Used**
+
+### **Frontend**
+- React.js  
+- JavaScript (ES6+)  
+- CSS / Responsive UI  
+- Component-based architecture
+
+### **Backend**
+- Node.js  
+- Express.js  
+- REST API design  
+- Authentication & Session Control  
+- WebSockets (real-time communication)
+
+### **Database**
+- MongoDB  
+- Mongoose ORM  
+- Schema-based data models
+
+### **Other**
+- JWT Authentication  
+- Git & GitHub  
+- Postman (API testing)  
+- Agile-inspired workflow  
+
+---
+
+## 📦 **Core Features**
+
+### 🔹 **1. Project Management**
+- Create & manage projects  
+- Task creation and assignment  
+- Status control (To-do → Doing → Done)  
+- Deadlines & priority levels  
+
+### 🔹 **2. Real-Time Communication**
+- Messaging/chat inside each project  
+- WebSockets for instant updates  
+- Notifications for new messages or activity  
+
+### 🔹 **3. File and Document Sharing**
+- Upload and associate files with tasks/projects  
+- Collaborative workspace  
+
+### 🔹 **4. Team Collaboration**
+- Team member roles  
+- Project-based permissions  
+- Centralized dashboard  
+
+### 🔹 **5. User Authentication**
+- Secure login system  
+- Token-based authentication  
+- Session management  
+
+---
+
+## 🧩 **Architecture Overview**
+
+WorkNest follows a **client-server architecture**, divided into:
+
+### **Frontend (React)**
+- UI rendering  
+- State & component management  
+- API communication layer  
+- Real-time UI updates via WebSockets
+
+### **Backend (Node.js + Express)**
+- API endpoints for CRUD operations  
+- Business logic  
+- Authentication  
+- Real-time event management  
+
+### **Database (MongoDB)**
+- Project documents  
+- User profiles  
+- Tasks, messages & uploaded files  
+
+*(Se quiseres, posso criar também um diagrama visual para colocar aqui.)*
+
+---
